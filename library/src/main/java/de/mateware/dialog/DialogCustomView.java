@@ -19,7 +19,7 @@ public abstract class DialogCustomView extends Dialog {
     private View customView;
 
     @Override
-    AppCompatDialog createDialogToReturn() {
+    public AppCompatDialog createDialogToReturn() {
         AlertDialog result = builder.create();
         setCustomView(getView(LayoutInflater.from(getContext()), null));
         result.setView(getCustomView());

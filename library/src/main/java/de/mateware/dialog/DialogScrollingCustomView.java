@@ -13,7 +13,7 @@ import android.widget.ScrollView;
 public abstract class DialogScrollingCustomView extends DialogCustomView {
 
     @Override
-    AppCompatDialog createDialogToReturn() {
+    public AppCompatDialog createDialogToReturn() {
         AlertDialog result = builder.create();
         ScrollView scroll = new ScrollView(getContext());
         scroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
