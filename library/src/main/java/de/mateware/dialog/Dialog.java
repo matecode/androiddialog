@@ -256,7 +256,7 @@ public class Dialog extends DialogFragment {
         if (hasMessage()) builder.setMessage(getMessage());
     }
 
-    AppCompatDialog createDialogToReturn() {
+    protected AppCompatDialog createDialogToReturn() {
         return builder.create();
     }
 
