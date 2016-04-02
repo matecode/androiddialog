@@ -6,10 +6,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
@@ -33,6 +33,8 @@ public class Dialog extends DialogFragment {
     static final String ARG_INT_ICONID = "icon_id";
 
     static final String ARG_INT_TIMER = "timer";
+
+    static final String ARG_INT_STYLE = "style";
 
     static final String ARG_INT_BUTTONTEXTPOSITIVE = "positive_button_resid";
     static final String ARG_INT_BUTTONTEXTNEGATIVE = "negative_button_resid";
@@ -68,6 +70,11 @@ public class Dialog extends DialogFragment {
 
     public Dialog withTimer(int seconds) {
         args.putInt(ARG_INT_TIMER, seconds);
+        return this;
+    }
+
+    public Dialog withStyle(@StyleRes int style) {
+        args.putInt(ARG_INT_STYLE,style);
         return this;
     }
 
@@ -155,9 +162,11 @@ public class Dialog extends DialogFragment {
             log.trace("Button", which);
             Bundle additionalArguments = new Bundle();
             args.putAll(additionalArgumentsOnClick(additionalArguments, which));
-            if (buttonListener != null) buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
-            else log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                              .getSimpleName());
+            if (buttonListener != null)
+                buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
+            else
+                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                             .getSimpleName());
         }
     };
 
@@ -167,7 +176,8 @@ public class Dialog extends DialogFragment {
     @Override
     public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
         log.trace(this.getTag());
-        builder = new AlertDialog.Builder(getContext(),R.style.Dialog);
+
+        builder = new AlertDialog.Builder(getActivity(), getStyle());
 
         if (hasIcon()) builder.setIcon(getIcon());
 
@@ -184,7 +194,6 @@ public class Dialog extends DialogFragment {
         AppCompatDialog dialog = createDialogToReturn();
 
 
-
         if (hasTimer()) {
 
         }
@@ -193,12 +202,11 @@ public class Dialog extends DialogFragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
         if (hasTimer()) {
-            timer = new CountDownTimer(getTimer()*1000,1000) {
+            timer = new CountDownTimer(getTimer() * 1000, 1000) {
 
                 TextView timerText;
 
@@ -222,23 +230,27 @@ public class Dialog extends DialogFragment {
     }
 
     public String getTimerText(long millisUntilFinished) {
-        return String.valueOf(millisUntilFinished/1000);
+        return String.valueOf(millisUntilFinished / 1000);
     }
 
-    public void onTimerFinished(){
+    public void onTimerFinished() {
         dismiss();
     }
 
     public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
-        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding);
-        int topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
+        int margin = getContext().getResources()
+                                 .getDimensionPixelSize(R.dimen.custom_dialog_padding);
+        int topMargin = getContext().getResources()
+                                    .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(margin,topMargin,margin,0);
+        params.setMargins(margin, topMargin, margin, 0);
         params.gravity = Gravity.END | Gravity.TOP;
 
         timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.text_size_title_material));
-        timerTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+
+
+        //timerTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
         return params;
     }
@@ -265,11 +277,11 @@ public class Dialog extends DialogFragment {
     }
 
     protected boolean hasTimer() {
-        return getArguments().containsKey(ARG_INT_TIMER) && getArguments().getInt(ARG_INT_TIMER,0) > 0;
+        return getArguments().containsKey(ARG_INT_TIMER) && getArguments().getInt(ARG_INT_TIMER, 0) > 0;
     }
 
     protected int getTimer() {
-        return getArguments().getInt(ARG_INT_TIMER,0);
+        return getArguments().getInt(ARG_INT_TIMER, 0);
     }
 
     protected boolean hasTitle() {
@@ -323,8 +335,13 @@ public class Dialog extends DialogFragment {
     protected String getText(String arg_string, String arg_int) {
         String result = null;
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
-        else if (getArguments().containsKey(arg_int)) result = getString(getArguments().getInt(arg_int));
+        else if (getArguments().containsKey(arg_int))
+            result = getString(getArguments().getInt(arg_int));
         return result;
+    }
+
+    protected int getStyle() {
+        return getArguments().getInt(ARG_INT_STYLE,0);
     }
 
 
@@ -353,9 +370,11 @@ public class Dialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (dismissListener != null) dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
-            else log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                               .getSimpleName());
+            if (dismissListener != null)
+                dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
+            else
+                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                              .getSimpleName());
         }
         super.onDismiss(dialog);
     }
@@ -364,9 +383,11 @@ public class Dialog extends DialogFragment {
     public void onCancel(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (cancelListener != null) cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
-            else log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                              .getSimpleName());
+            if (cancelListener != null)
+                cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
+            else
+                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                             .getSimpleName());
         }
         super.onCancel(dialog);
     }

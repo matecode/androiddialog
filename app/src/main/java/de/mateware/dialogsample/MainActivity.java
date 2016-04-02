@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Dialog().withMessage("Test").withPositiveButton().show(getSupportFragmentManager(),"DIALOGTEST");
+                new Dialog().withMessage("Test")
+                            .withStyle(R.style.Dialog)
+                        .withTimer(10)
+                            .withPositiveButton()
+                            .show(getSupportFragmentManager(), "DIALOGTEST");
             }
         });
     }
