@@ -39,11 +39,12 @@ public abstract class DialogAdapterList extends Dialog {
 
     @Override
     void setDialogContent() {
-        builder.setAdapter(getAdapter(), onClickListener);
+        alertDialogBuilder.setAdapter(getAdapter(), onClickListener);
     }
 
     public DialogAdapterList withEntries(ArrayList<? extends DialogAdapterListEntry> entries) {
-        args.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
+        //TODO
+        //args.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
         return this;
     }
 
