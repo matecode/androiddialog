@@ -29,7 +29,6 @@ public abstract class DialogAdapterList extends Dialog {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             DialogAdapterListEntry entry = getEntries().get(which);
-
             log.debug("Button {} {}", which,entry);
             if (listListener != null) listListener.onDialogAdapterListClick(getTag(), entry, DialogAdapterList.this.getArguments());
             else log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()

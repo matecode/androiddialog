@@ -219,9 +219,6 @@
   <component name="ProjectType">
     <option name="id" value="Android" />
   </component>
-  <component name="SvnConfiguration" myUseAcceleration="nothing">
-    <configuration>C:\Users\mate\AppData\Roaming\Subversion</configuration>
-  </component>
   <component name="masterDetails">
     <states>
       <state key="Copyright.UI">
