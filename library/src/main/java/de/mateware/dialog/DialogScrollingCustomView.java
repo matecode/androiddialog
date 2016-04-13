@@ -14,7 +14,7 @@ public abstract class DialogScrollingCustomView extends DialogCustomView {
 
     @Override
     public AppCompatDialog createDialogToReturn() {
-        AlertDialog result = alertDialogBuilder.create();
+        AlertDialog result = builder.create();
         ScrollView scroll = new ScrollView(getContext());
         scroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT));

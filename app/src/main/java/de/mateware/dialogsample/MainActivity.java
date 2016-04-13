@@ -10,13 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mateware.dialog.Dialog;
 
-public class MainActivity extends AppCompatActivity implements Dialog.DialogButtonListener, Dialog.DialogCancelListener, Dialog.DialogDismissListener {
-    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,27 +36,11 @@ public class MainActivity extends AppCompatActivity implements Dialog.DialogButt
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                new Dialog().withMessage("Test")
-                //                            .withStyle(R.style.Dialog)
-                //                        .withTimer(10)
-                //                            .withPositiveButton()
-                //                            .show(getSupportFragmentManager(), "DIALOGTEST");
-
-                Bundle extraStuff = new Bundle();
-                extraStuff.putString("TEST", "test");
-
-                new Dialog.Builder("DIALOGBUILDERTEST").setTitle("Title")
-                                                       .setIcon(R.mipmap.ic_launcher)
-                                                       .setMessage("Test")
-                                                       .setPositiveButton()
-                                                       .setNeutralButton(R.string.app_name)
-                                                       .setNegativeButton("Nö")
-                                                       .setCancelable(false)
-                                                       .setTimerSeconds(10)
-                                                       .setStyle(R.style.Dialog)
-                                                       .setBundle(extraStuff)
-                                                       .build()
-                                                       .show(MainActivity.this);
+                new Dialog().withMessage("Test")
+                            .withStyle(R.style.Dialog)
+                        .withTimer(10)
+                            .withPositiveButton()
+                            .show(getSupportFragmentManager(), "DIALOGTEST");
             }
         });
     }
@@ -85,20 +65,5 @@ public class MainActivity extends AppCompatActivity implements Dialog.DialogButt
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDialogClick(String tag, Bundle arguments, int which) {
-        log.debug("tag: {}, arguments: {}, which: {}", tag, arguments.toString(), which);
-    }
-
-    @Override
-    public void onDialogCancel(String tag, Bundle arguments) {
-        log.debug("tag: {}, arguments: {}", tag, arguments.toString());
-    }
-
-    @Override
-    public void onDialogDismiss(String tag, Bundle arguments) {
-        log.debug("tag: {}, arguments: {}", tag, arguments.toString());
     }
 }

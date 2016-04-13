@@ -29,7 +29,6 @@ public abstract class DialogAdapterList extends Dialog {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             DialogAdapterListEntry entry = getEntries().get(which);
-
             log.debug("Button {} {}", which,entry);
             if (listListener != null) listListener.onDialogAdapterListClick(getTag(), entry, DialogAdapterList.this.getArguments());
             else log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
@@ -39,12 +38,11 @@ public abstract class DialogAdapterList extends Dialog {
 
     @Override
     void setDialogContent() {
-        alertDialogBuilder.setAdapter(getAdapter(), onClickListener);
+        builder.setAdapter(getAdapter(), onClickListener);
     }
 
     public DialogAdapterList withEntries(ArrayList<? extends DialogAdapterListEntry> entries) {
-        //TODO
-        //args.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
+        args.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
         return this;
     }
 

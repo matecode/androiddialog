@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * Created by mate on 21.10.2015.
@@ -28,14 +29,13 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         LinearLayout.LayoutParams progressCircleLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layout.addView(progressCircle, progressCircleLayoutParams);
 
-        //TODO
-//        if (hasMessage()) {
-//            TextView messageView = new TextView(getContext());
-//            messageView.setText(getMessage());
-//            LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            textLayoutParams.setMargins(customDialogMargin, 0, 0, 0);
-//            layout.addView(messageView, textLayoutParams);
-//        }
+        if (hasMessage()) {
+            TextView messageView = new TextView(getContext());
+            messageView.setText(getMessage());
+            LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            textLayoutParams.setMargins(customDialogMargin, 0, 0, 0);
+            layout.addView(messageView, textLayoutParams);
+        }
         return layout;
     }
 }

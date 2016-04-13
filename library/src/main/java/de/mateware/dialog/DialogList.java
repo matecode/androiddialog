@@ -36,15 +36,14 @@ public class DialogList extends Dialog {
 
     public DialogList withList(String... items)
     {
-        //TODO
-        //args.putStringArray(ARG_ARRAY_STRING_ITEMS, items);
+        args.putStringArray(ARG_ARRAY_STRING_ITEMS, items);
         return this;
     }
 
     @Override
     void setDialogContent() {
         if (hasItems())
-            alertDialogBuilder.setItems(getItems(), onClickListener);
+            builder.setItems(getItems(), onClickListener);
     }
 
     @Override
