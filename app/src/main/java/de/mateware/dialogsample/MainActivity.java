@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                             .withStyle(R.style.Dialog)
                         .withTimer(10)
                             .withPositiveButton()
-                            .show(getSupportFragmentManager(), "DIALOGTEST");
+                            .showAllowStateLoss( getSupportFragmentManager(), "DIALOGTEST");
             }
         });
     }

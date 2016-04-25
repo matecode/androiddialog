@@ -68,6 +68,19 @@ public class Dialog extends DialogFragment {
         return super.show(transaction, tag);
     }
 
+    public int showAllowStateLoss(@NonNull FragmentManager manager, String tag) {
+        this.setArguments(args);
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.add(this, tag);
+        return fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public int showAllowStateLoss(@NonNull FragmentTransaction transaction, String tag) {
+        this.setArguments(args);
+        return transaction.commitAllowingStateLoss();
+    }
+
+
     public Dialog withTimer(int seconds) {
         args.putInt(ARG_INT_TIMER, seconds);
         return this;
