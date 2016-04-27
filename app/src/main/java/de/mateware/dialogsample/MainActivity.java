@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         new DialogIndeterminateProgress().withMessage("And the wheel goes round and round and round")
                                          .withStyle(R.style.Dialog)
                                          .withCancelable(false)
-                                         .withTimer(15)
+                                         .withTimer(15000)
                                          .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
     }
 }

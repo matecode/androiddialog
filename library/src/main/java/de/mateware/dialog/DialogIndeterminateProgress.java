@@ -1,5 +1,6 @@
 package de.mateware.dialog;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layout.setLayoutParams(params);
         int customDialogMargin = getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding);
-        layout.setPadding(0, 0, 0, customDialogMargin);
+        layout.setPadding(customDialogMargin, customDialogMargin, customDialogMargin, (!TextUtils.isEmpty(getPositiveButton())||!TextUtils.isEmpty(getNeutralButton())||!TextUtils.isEmpty(getNegativeButton())) ? 0 : customDialogMargin);
         layout.setGravity(Gravity.CENTER_VERTICAL);
 
         ProgressBar progressCircle = new ProgressBar(getContext());
