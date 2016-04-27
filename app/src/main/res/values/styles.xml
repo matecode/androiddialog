@@ -17,7 +17,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="Dialog" parent="DialogBaseThemeLight">
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 

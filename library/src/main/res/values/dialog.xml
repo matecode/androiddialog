@@ -3,6 +3,16 @@
     <dimen name="custom_dialog_padding">@dimen/abc_dialog_padding_material</dimen>
     <dimen name="custom_dialog_padding_top">@dimen/abc_dialog_padding_top_material</dimen>
     <dimen name="text_size_title_material">@dimen/abc_text_size_title_material</dimen>
-    <dimen name="text_size_timer">@dimen/abc_text_size_button_material </dimen>
+    <dimen name="text_size_timer">@dimen/abc_text_size_button_material</dimen>
+    <dimen name="window_min_width_major">@dimen/abc_dialog_min_width_major</dimen>
+    <dimen name="window_min_width_minor">@dimen/abc_dialog_min_width_minor</dimen>
     <dimen name="text_padding_timer">2dp</dimen>
+    <style name="DialogBaseThemeLight" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowMinWidthMajor">@dimen/window_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/window_min_width_minor</item>
+    </style>
+    <style name="DialogBaseTheme" parent="Theme.AppCompat.Dialog">
+        <item name="windowMinWidthMajor">@dimen/window_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/window_min_width_minor</item>
+    </style>
 </resources>
