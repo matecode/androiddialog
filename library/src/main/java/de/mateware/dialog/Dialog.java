@@ -3,13 +3,17 @@ package de.mateware.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
@@ -32,7 +36,7 @@ public class Dialog extends DialogFragment {
 
     static final String ARG_INT_ICONID = "icon_id";
 
-    static final String ARG_INT_TIMER = "timer";
+    static final String ARG_LONG_TIMER = "timer";
 
     static final String ARG_INT_STYLE = "style";
 
@@ -52,6 +56,7 @@ public class Dialog extends DialogFragment {
     DialogDismissListener dismissListener;
     DialogCancelListener cancelListener;
     CountDownTimer timer;
+    long timermillis;
 
     public static Logger log = LoggerFactory.getLogger(Dialog.class);
 
@@ -81,13 +86,13 @@ public class Dialog extends DialogFragment {
     }
 
 
-    public Dialog withTimer(int seconds) {
-        args.putInt(ARG_INT_TIMER, seconds);
+    public Dialog withTimer(long millis) {
+        args.putLong(ARG_LONG_TIMER, millis);
         return this;
     }
 
     public Dialog withStyle(@StyleRes int style) {
-        args.putInt(ARG_INT_STYLE,style);
+        args.putInt(ARG_INT_STYLE, style);
         return this;
     }
 
@@ -175,11 +180,9 @@ public class Dialog extends DialogFragment {
             log.trace("Button", which);
             Bundle additionalArguments = new Bundle();
             args.putAll(additionalArgumentsOnClick(additionalArguments, which));
-            if (buttonListener != null)
-                buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
-            else
-                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                             .getSimpleName());
+            if (buttonListener != null) buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
+            else log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                              .getSimpleName());
         }
     };
 
@@ -206,44 +209,61 @@ public class Dialog extends DialogFragment {
 
         AppCompatDialog dialog = createDialogToReturn();
 
-
-        if (hasTimer()) {
-
-        }
-
         return dialog;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        timermillis = getArguments().getLong(ARG_LONG_TIMER, 0);
+        if (savedInstanceState != null) timermillis = savedInstanceState.getLong(ARG_LONG_TIMER, 0);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasTimer()) {
-            timer = new CountDownTimer(getTimer() * 1000, 1000) {
+        if (getTimerMillis() > 0) {
+            timer = new CountDownTimer(getTimerMillis(), 100) {
 
                 TextView timerText;
 
                 @Override
                 public void onTick(long millisUntilFinished) {
+                    log.debug("millisUntilFinished: {}", millisUntilFinished);
                     if (timerText == null) {
                         timerText = new TextView(getContext());
                         FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
                         getDialog().addContentView(timerText, lp);
                     }
+                    timermillis = millisUntilFinished;
                     timerText.setText(getTimerText(millisUntilFinished));
                 }
 
                 @Override
                 public void onFinish() {
+                    log.debug("Finished timer with millis {}", timermillis);
+                    timermillis = 0;
+                    timerText.setText(getTimerText(0));
                     onTimerFinished();
                 }
             };
             timer.start();
         }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong(ARG_LONG_TIMER, timermillis);
+        super.onSaveInstanceState(outState);
     }
 
     public String getTimerText(long millisUntilFinished) {
-        return String.valueOf(millisUntilFinished / 1000);
+        return String.valueOf(Math.round(((double)millisUntilFinished) / 1000));
+    }
+
+    public long getTimerMillis() {
+        return timermillis;
     }
 
     public void onTimerFinished() {
@@ -255,13 +275,28 @@ public class Dialog extends DialogFragment {
                                  .getDimensionPixelSize(R.dimen.custom_dialog_padding);
         int topMargin = getContext().getResources()
                                     .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
+        int textPadding = getContext().getResources().getDimensionPixelSize(R.dimen.text_padding_timer);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(margin, topMargin, margin, 0);
+        params.setMargins(0, textPadding, textPadding, 0);
+
+
         params.gravity = Gravity.END | Gravity.TOP;
 
-        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.text_size_title_material));
+        timerTextView.setPadding(textPadding,0,textPadding,0);
 
+        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_timer));
+
+        TypedArray a = getContext().obtainStyledAttributes(getTheme(),new int[]{R.attr.colorPrimary});
+
+        int attributeResourceId = a.getResourceId(0, 0);
+        a.recycle();
+
+        int bgcolor = ContextCompat.getColor(getContext(),attributeResourceId);
+        double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
+        int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
+
+        timerTextView.setBackgroundColor(bgcolor);
+        timerTextView.setTextColor(textColor);
 
         //timerTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
@@ -290,11 +325,7 @@ public class Dialog extends DialogFragment {
     }
 
     protected boolean hasTimer() {
-        return getArguments().containsKey(ARG_INT_TIMER) && getArguments().getInt(ARG_INT_TIMER, 0) > 0;
-    }
-
-    protected int getTimer() {
-        return getArguments().getInt(ARG_INT_TIMER, 0);
+        return getArguments().containsKey(ARG_LONG_TIMER) && getArguments().getLong(ARG_LONG_TIMER, 0) > 0;
     }
 
     protected boolean hasTitle() {
@@ -348,13 +379,12 @@ public class Dialog extends DialogFragment {
     protected String getText(String arg_string, String arg_int) {
         String result = null;
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
-        else if (getArguments().containsKey(arg_int))
-            result = getString(getArguments().getInt(arg_int));
+        else if (getArguments().containsKey(arg_int)) result = getString(getArguments().getInt(arg_int));
         return result;
     }
 
     protected int getStyle() {
-        return getArguments().getInt(ARG_INT_STYLE,0);
+        return getArguments().getInt(ARG_INT_STYLE, 0);
     }
 
 
@@ -383,11 +413,9 @@ public class Dialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (dismissListener != null)
-                dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
-            else
-                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                              .getSimpleName());
+            if (dismissListener != null) dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
+            else log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                               .getSimpleName());
         }
         super.onDismiss(dialog);
     }
@@ -396,11 +424,9 @@ public class Dialog extends DialogFragment {
     public void onCancel(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (cancelListener != null)
-                cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
-            else
-                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                             .getSimpleName());
+            if (cancelListener != null) cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
+            else log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                              .getSimpleName());
         }
         super.onCancel(dialog);
     }

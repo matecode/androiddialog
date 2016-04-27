@@ -15,20 +15,16 @@
     tools:showIn="@layout/activity_main">
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"/>
+        android:text="Normal Dialog"
+        android:onClick="dialog"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button2"/>
+        android:text="Indeterminate Progress, not cancelable with timer"
+        android:onClick="indeterminateProgress"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button3"/>
+
 </LinearLayout>
