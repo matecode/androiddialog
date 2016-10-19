@@ -19,18 +19,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void dialog(View view) {
-        new Dialog().withTitle("Dialog Title")
-                    .withMessage("This is a standard dialog.")
-                    .withStyle(R.style.Dialog)
-                    .withPositiveButton()
-                    .show(getSupportFragmentManager(), "DIALOG");
+        new Dialog.Builder().setTitle("DialogTitle")
+                            .setMessage("This is a standard dialog.")
+                            .setStyle(R.style.Dialog)
+                            .setPositiveButton()
+                            .build()
+                            .show(getSupportFragmentManager(), "DIALOG");
+
     }
 
     public void indeterminateProgress(View view) {
-        new DialogIndeterminateProgress().withMessage("And the wheel goes round and round and round")
-                                         .withStyle(R.style.Dialog)
-                                         .withCancelable(false)
-                                         .withTimer(15000)
-                                         .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
+        new DialogIndeterminateProgress.Builder().setMessage("And the wheel goes round and round and round")
+                                                 .setStyle(R.style.Dialog)
+                                                 .setCancelable(false)
+                                                 .setTimer(15000)
+                                                 .build()
+                                                 .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
+
+//        new DialogIndeterminateProgress().withMessage("And the wheel goes round and round and round")
+//                                         .withStyle(R.style.Dialog)
+//                                         .withCancelable(false)
+//                                         .withTimer(15000)
+//                                         .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
+    }
+
+    public void customView(View view) {
+        new DialogCustomViewExample.Builder().setTitle("Custom View")
+                                             .setStyle(R.style.Dialog)
+                                             .setPositiveButton()
+                                             .build()
+                                             .show(getSupportFragmentManager(), "CUSTOM-DiAlOG");
     }
 }

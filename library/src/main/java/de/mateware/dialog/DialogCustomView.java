@@ -11,34 +11,27 @@ import android.view.ViewGroup;
  * Created by Mate on 18.10.2015.
  */
 public abstract class DialogCustomView extends Dialog {
+
     @Override
     void setDialogContent() {
         //Override to do nothing
     }
 
-    private View customView;
-
     @Override
     public AppCompatDialog createDialogToReturn() {
         AlertDialog result = builder.create();
-        setCustomView(getView(LayoutInflater.from(getContext()), null));
-        result.setView(getCustomView());
+        result.setView(getView(LayoutInflater.from(getContext()), null));
         return result;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    public void setCustomView(View customView) {
-        this.customView = customView;
-    }
-
-    public View getCustomView() {
-        return customView;
-    }
-
     public abstract View getView(LayoutInflater inflater, ViewGroup parent);
+
+    public abstract static class AbstractBuilder<T extends AbstractBuilder, K extends DialogCustomView> extends Dialog.AbstractBuilder<T,K> {
+
+        public AbstractBuilder(Class<K> clazz) {
+            super(clazz);
+        }
+
+    }
 
 }

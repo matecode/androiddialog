@@ -39,4 +39,10 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         }
         return layout;
     }
+
+    public static class Builder extends Dialog.AbstractBuilder<Builder, DialogIndeterminateProgress> {
+        public Builder() {
+            super(DialogIndeterminateProgress.class);
+        }
+    }
 }
