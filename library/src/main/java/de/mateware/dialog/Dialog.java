@@ -51,7 +51,7 @@ public class Dialog extends DialogFragment {
     public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
     public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
-    public Bundle args = new Bundle();
+    //public Bundle args = new Bundle();
     DialogButtonListener buttonListener;
     DialogDismissListener dismissListener;
     DialogCancelListener cancelListener;
@@ -63,114 +63,26 @@ public class Dialog extends DialogFragment {
 
     @Override
     public void show(@NonNull FragmentManager manager, String tag) {
-        this.setArguments(args);
+        //this.setArguments(args);
         super.show(manager, tag);
     }
 
     @Override
     public int show(@NonNull FragmentTransaction transaction, String tag) {
-        this.setArguments(args);
+        //this.setArguments(args);
         return super.show(transaction, tag);
     }
 
     public int showAllowStateLoss(@NonNull FragmentManager manager, String tag) {
-        this.setArguments(args);
+        //this.setArguments(args);
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(this, tag);
         return fragmentTransaction.commitAllowingStateLoss();
     }
 
     public int showAllowStateLoss(@NonNull FragmentTransaction transaction, String tag) {
-        this.setArguments(args);
+        //this.setArguments(args);
         return transaction.commitAllowingStateLoss();
-    }
-
-
-    public Dialog withTimer(long millis) {
-        args.putLong(ARG_LONG_TIMER, millis);
-        return this;
-    }
-
-    public Dialog withStyle(@StyleRes int style) {
-        args.putInt(ARG_INT_STYLE, style);
-        return this;
-    }
-
-    public Dialog withTitle(String title) {
-        args.putString(ARG_STRING_TITLE, title);
-        return this;
-    }
-
-    public Dialog withTitle(int resId) {
-        args.putInt(ARG_INT_TITLE, resId);
-        return this;
-    }
-
-    public Dialog withMessage(String message) {
-        args.putString(ARG_STRING_MESSAGE, message);
-        return this;
-    }
-
-    public Dialog withMessage(int resId) {
-        args.putInt(ARG_INT_MESSAGE, resId);
-        return this;
-    }
-
-    public Dialog withPositiveButton(String text) {
-        args.putString(ARG_STRING_BUTTONTEXTPOSITIVE, text);
-        return this;
-    }
-
-    public Dialog withPositiveButton(int resId) {
-        args.putInt(ARG_INT_BUTTONTEXTPOSITIVE, resId);
-        return this;
-    }
-
-    public Dialog withPositiveButton() {
-        return withPositiveButton(android.R.string.ok);
-    }
-
-    public Dialog withNeutralButton(String text) {
-        args.putString(ARG_STRING_BUTTONTEXTNEUTRAL, text);
-        return this;
-    }
-
-    public Dialog withNeutralButton(int resId) {
-        args.putInt(ARG_INT_BUTTONTEXTNEUTRAL, resId);
-        return this;
-    }
-
-    public Dialog withNeutralButton() {
-        return withNeutralButton(android.R.string.untitled);
-    }
-
-    public Dialog withNegativeButton(String text) {
-        args.putString(ARG_STRING_BUTTONTEXTNEGATIVE, text);
-        return this;
-    }
-
-    public Dialog withNegativeButton(int resId) {
-        args.putInt(ARG_INT_BUTTONTEXTNEGATIVE, resId);
-        return this;
-    }
-
-    public Dialog withNegativeButton() {
-        return withNegativeButton(android.R.string.cancel);
-    }
-
-    public Dialog withIcon(int resId) {
-        args.putInt(ARG_INT_ICONID, resId);
-        return this;
-    }
-
-    public Dialog withCancelable(boolean cancelable) {
-        this.setCancelable(cancelable);
-        return this;
-    }
-
-    public Dialog withBundle(Bundle bundle) {
-        args.putAll(bundle);
-        return this;
     }
 
     DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
@@ -178,11 +90,14 @@ public class Dialog extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             log.trace("Button", which);
-            Bundle additionalArguments = new Bundle();
-            args.putAll(additionalArgumentsOnClick(additionalArguments, which));
-            if (buttonListener != null) buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
-            else log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                              .getSimpleName());
+            //Bundle additionalArguments = new Bundle();
+
+            //args.putAll(additionalArgumentsOnClick(additionalArguments, which));
+            if (buttonListener != null)
+                buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
+            else
+                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                        .getSimpleName());
         }
     };
 
@@ -259,7 +174,7 @@ public class Dialog extends DialogFragment {
     }
 
     public String getTimerText(long millisUntilFinished) {
-        return String.valueOf(Math.round(((double)millisUntilFinished) / 1000));
+        return String.valueOf(Math.round(((double) millisUntilFinished) / 1000));
     }
 
     public long getTimerMillis() {
@@ -272,9 +187,9 @@ public class Dialog extends DialogFragment {
 
     public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
         int margin = getContext().getResources()
-                                 .getDimensionPixelSize(R.dimen.custom_dialog_padding);
+                .getDimensionPixelSize(R.dimen.custom_dialog_padding);
         int topMargin = getContext().getResources()
-                                    .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
+                .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
         int textPadding = getContext().getResources().getDimensionPixelSize(R.dimen.text_padding_timer);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, textPadding, textPadding, 0);
@@ -282,16 +197,16 @@ public class Dialog extends DialogFragment {
 
         params.gravity = Gravity.END | Gravity.TOP;
 
-        timerTextView.setPadding(textPadding,0,textPadding,0);
+        timerTextView.setPadding(textPadding, 0, textPadding, 0);
 
         timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_timer));
 
-        TypedArray a = getContext().obtainStyledAttributes(getTheme(),new int[]{R.attr.colorPrimary});
+        TypedArray a = getContext().obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
 
         int attributeResourceId = a.getResourceId(0, 0);
         a.recycle();
 
-        int bgcolor = ContextCompat.getColor(getContext(),attributeResourceId);
+        int bgcolor = ContextCompat.getColor(getContext(), attributeResourceId);
         double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
         int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
 
@@ -320,9 +235,6 @@ public class Dialog extends DialogFragment {
         return builder.create();
     }
 
-    public Bundle additionalArgumentsOnClick(Bundle additionalArgs, int which) {
-        return additionalArgs;
-    }
 
     protected boolean hasTimer() {
         return getArguments().containsKey(ARG_LONG_TIMER) && getArguments().getLong(ARG_LONG_TIMER, 0) > 0;
@@ -379,7 +291,8 @@ public class Dialog extends DialogFragment {
     protected String getText(String arg_string, String arg_int) {
         String result = null;
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
-        else if (getArguments().containsKey(arg_int)) result = getString(getArguments().getInt(arg_int));
+        else if (getArguments().containsKey(arg_int))
+            result = getString(getArguments().getInt(arg_int));
         return result;
     }
 
@@ -413,9 +326,11 @@ public class Dialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (dismissListener != null) dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
-            else log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                               .getSimpleName());
+            if (dismissListener != null)
+                dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
+            else
+                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                        .getSimpleName());
         }
         super.onDismiss(dialog);
     }
@@ -424,11 +339,142 @@ public class Dialog extends DialogFragment {
     public void onCancel(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
-            if (cancelListener != null) cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
-            else log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                              .getSimpleName());
+            if (cancelListener != null)
+                cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
+            else
+                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                        .getSimpleName());
         }
         super.onCancel(dialog);
+    }
+
+
+    public static void dismissDialog(FragmentManager fm, String dialogTag) {
+        log.trace(dialogTag);
+        DialogFragment dialog = (DialogFragment) fm.findFragmentByTag(dialogTag);
+        if (dialog != null) dialog.dismiss();
+    }
+
+
+    static abstract class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
+
+        Bundle builderArgs = new Bundle();
+
+        private Class<K> clazz;
+        private boolean cancelable = true;
+
+        AbstractBuilder(Class<K> clazz) {
+            this.clazz = clazz;
+        }
+
+
+        public T setTimer(long millis) {
+            builderArgs.putLong(ARG_LONG_TIMER, millis);
+            return (T) this;
+        }
+
+        public T setStyle(@StyleRes int style) {
+            builderArgs.putInt(ARG_INT_STYLE, style);
+            return (T) this;
+        }
+
+        public T setTitle(String title) {
+            builderArgs.putString(ARG_STRING_TITLE, title);
+            return (T) this;
+        }
+
+        public T setTitle(int resId) {
+            builderArgs.putInt(ARG_INT_TITLE, resId);
+            return (T) this;
+        }
+
+        public T setMessage(String message) {
+            builderArgs.putString(ARG_STRING_MESSAGE, message);
+            return (T) this;
+        }
+
+        public T setMessage(int resId) {
+            builderArgs.putInt(ARG_INT_MESSAGE, resId);
+            return (T) this;
+        }
+
+        public T setPositiveButton(String text) {
+            builderArgs.putString(ARG_STRING_BUTTONTEXTPOSITIVE, text);
+            return (T) this;
+        }
+
+        public T setPositiveButton(int resId) {
+            builderArgs.putInt(ARG_INT_BUTTONTEXTPOSITIVE, resId);
+            return (T) this;
+        }
+
+        public T setPositiveButton() {
+            return setPositiveButton(android.R.string.ok);
+        }
+
+        public T setNeutralButton(String text) {
+            builderArgs.putString(ARG_STRING_BUTTONTEXTNEUTRAL, text);
+            return (T) this;
+        }
+
+        public T setNeutralButton(int resId) {
+            builderArgs.putInt(ARG_INT_BUTTONTEXTNEUTRAL, resId);
+            return (T) this;
+        }
+
+        public T setNeutralButton() {
+            return setNeutralButton(android.R.string.untitled);
+        }
+
+        public T setNegativeButton(String text) {
+            builderArgs.putString(ARG_STRING_BUTTONTEXTNEGATIVE, text);
+            return (T) this;
+        }
+
+        public T setNegativeButton(int resId) {
+            builderArgs.putInt(ARG_INT_BUTTONTEXTNEGATIVE, resId);
+            return (T) this;
+        }
+
+        public T setNegativeButton() {
+            return setNegativeButton(android.R.string.cancel);
+        }
+
+        public T setIcon(int resId) {
+            builderArgs.putInt(ARG_INT_ICONID, resId);
+            return (T) this;
+        }
+
+        public T setCancelable(boolean cancelable) {
+            this.cancelable = cancelable;
+            return (T) this;
+        }
+
+        public T addBundle(Bundle bundle) {
+            builderArgs.putAll(bundle);
+            return (T) this;
+        }
+
+
+        public K build() {
+            try {
+                K result = clazz.newInstance();
+                result.setArguments(builderArgs);
+                result.setCancelable(cancelable);
+                return result;
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static class Builder extends AbstractBuilder<Builder, Dialog> {
+        public Builder() {
+            super(Dialog.class);
+        }
     }
 
     public interface DialogButtonListener {
@@ -444,9 +490,4 @@ public class Dialog extends DialogFragment {
         public void onDialogCancel(String tag, Bundle arguments);
     }
 
-    public static void dismissDialog(FragmentManager fm, String dialogTag) {
-        log.trace(dialogTag);
-        DialogFragment dialog = (DialogFragment) fm.findFragmentByTag(dialogTag);
-        if (dialog != null) dialog.dismiss();
-    }
 }

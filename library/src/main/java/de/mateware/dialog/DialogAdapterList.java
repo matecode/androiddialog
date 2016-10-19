@@ -41,10 +41,7 @@ public abstract class DialogAdapterList extends Dialog {
         builder.setAdapter(getAdapter(), onClickListener);
     }
 
-    public DialogAdapterList withEntries(ArrayList<? extends DialogAdapterListEntry> entries) {
-        args.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
-        return this;
-    }
+
 
     public abstract ListAdapter getAdapter();
 
@@ -69,7 +66,19 @@ public abstract class DialogAdapterList extends Dialog {
     }
 
     public interface DialogAdapterListListener {
-        public void onDialogAdapterListClick(String tag, DialogAdapterListEntry entry, Bundle arguments);
+        void onDialogAdapterListClick(String tag, DialogAdapterListEntry entry, Bundle arguments);
+    }
+
+    static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogList> extends Dialog.AbstractBuilder<T, K> {
+
+        AbstractBuilder(Class<K> clazz) {
+            super(clazz);
+        }
+
+        public T setEntries(ArrayList<? extends DialogAdapterListEntry> entries) {
+            builderArgs.putParcelableArrayList(ARG_ARRAY_PARCABLE_ARCHIVEENTRIES, entries);
+            return (T) this;
+        }
     }
 
 }

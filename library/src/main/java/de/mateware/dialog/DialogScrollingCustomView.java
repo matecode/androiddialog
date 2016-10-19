@@ -22,8 +22,7 @@ public abstract class DialogScrollingCustomView extends DialogCustomView {
         int topPadding = getContext().getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
         scroll.setPadding(padding, topPadding, padding, 0);
         scroll.setClipToPadding(false);
-        setCustomView(getView(LayoutInflater.from(getContext()), scroll));
-        scroll.addView(getCustomView());
+        scroll.addView(getView(LayoutInflater.from(getContext()), scroll));
         result.setView(scroll);
         return result;
     }

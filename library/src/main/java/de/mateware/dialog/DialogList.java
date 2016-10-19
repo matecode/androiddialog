@@ -34,11 +34,29 @@ public class DialogList extends Dialog {
     };
 
 
-    public DialogList withList(String... items)
-    {
-        args.putStringArray(ARG_ARRAY_STRING_ITEMS, items);
-        return this;
+    static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogList> extends Dialog.AbstractBuilder<T, K> {
+
+        AbstractBuilder(Class<K> clazz) {
+            super(clazz);
+        }
+
+        public T setList(String... items)
+        {
+            builderArgs.putStringArray(ARG_ARRAY_STRING_ITEMS, items);
+            return (T) this;
+        }
     }
+
+
+    public static class Builder extends AbstractBuilder<Builder,DialogList> {
+
+        public Builder() {
+            super(DialogList.class);
+        }
+    }
+
+
+
 
     @Override
     void setDialogContent() {
