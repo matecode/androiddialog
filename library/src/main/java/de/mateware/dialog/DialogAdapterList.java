@@ -29,10 +29,12 @@ public abstract class DialogAdapterList extends Dialog {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             DialogAdapterListEntry entry = getEntries().get(which);
-            log.debug("Button {} {}", which,entry);
-            if (listListener != null) listListener.onDialogAdapterListClick(getTag(), entry, DialogAdapterList.this.getArguments());
-            else log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                                                                                                           .getSimpleName());
+            log.debug("Button {} {}", which, entry);
+            if (listListener != null)
+                listListener.onDialogAdapterListClick(getTag(), entry, DialogAdapterList.this.getArguments());
+            else
+                log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
+                                                                                                                  .getSimpleName());
         }
     };
 
@@ -42,12 +44,11 @@ public abstract class DialogAdapterList extends Dialog {
     }
 
 
-
     public abstract ListAdapter getAdapter();
 
     public abstract ArrayList<? extends DialogAdapterListEntry> getEntries();
 
-    public abstract static class DialogAdapterListEntry implements Parcelable{
+    public abstract static class DialogAdapterListEntry implements Parcelable {
         @Override
         public String toString() {
             return ToStringBuilder.reflectionToString(this);
@@ -69,9 +70,9 @@ public abstract class DialogAdapterList extends Dialog {
         void onDialogAdapterListClick(String tag, DialogAdapterListEntry entry, Bundle arguments);
     }
 
-    public static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogAdapterList> extends Dialog.AbstractBuilder<T, K> {
+    public static abstract class AbstractBuilder<T extends AbstractBuilder, K extends DialogAdapterList> extends Dialog.AbstractBuilder<T, K> {
 
-        AbstractBuilder(Class<K> clazz) {
+        public AbstractBuilder(Class<K> clazz) {
             super(clazz);
         }
 
