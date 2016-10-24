@@ -69,7 +69,7 @@ public abstract class DialogAdapterList extends Dialog {
         void onDialogAdapterListClick(String tag, DialogAdapterListEntry entry, Bundle arguments);
     }
 
-    public static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogList> extends Dialog.AbstractBuilder<T, K> {
+    public static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogAdapterList> extends Dialog.AbstractBuilder<T, K> {
 
         AbstractBuilder(Class<K> clazz) {
             super(clazz);
