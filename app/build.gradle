@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVer
+    buildToolsVersion rootProject.ext.buildToolsVer
 
     defaultConfig {
         applicationId "de.mateware.dialogsample"
-        minSdkVersion 9
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVer
+        targetSdkVersion rootProject.ext.targetSdkVer
+        versionCode rootProject.ext.versionCodeInt
+        versionName "1.0" + versionCode
     }
     buildTypes {
         release {
@@ -20,10 +20,9 @@ android {
 }
 
 dependencies {
-    final SUPPORT_LIBRARY_VERSION = "23.2.1"
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:' + SUPPORT_LIBRARY_VERSION
-    compile 'com.android.support:design:' + SUPPORT_LIBRARY_VERSION
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibVer"
+    compile "com.android.support:design:$rootProject.ext.supportLibVer"
     compile project(path: ':library')
 }
