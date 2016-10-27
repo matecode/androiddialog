@@ -2,7 +2,6 @@ package de.mateware.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ListAdapter;
 
@@ -11,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+
+import de.mateware.dialog.listener.DialogAdapterListListener;
 
 /**
  * Created by Mate on 18.03.2015.
@@ -64,10 +65,6 @@ public abstract class DialogAdapterList extends Dialog {
         } catch (ClassCastException e) {
             log.warn(e.getMessage());
         }
-    }
-
-    public interface DialogAdapterListListener {
-        void onDialogAdapterListClick(String tag, DialogAdapterListEntry entry, Bundle arguments);
     }
 
     public static abstract class AbstractBuilder<T extends AbstractBuilder, K extends DialogAdapterList> extends Dialog.AbstractBuilder<T, K> {

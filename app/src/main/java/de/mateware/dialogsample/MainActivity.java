@@ -5,10 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.mateware.dialog.Dialog;
 import de.mateware.dialog.DialogIndeterminateProgress;
+import de.mateware.dialog.listener.DialogButtonListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DialogButtonListener {
+
+    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
+
+    static final String TAG_DIALOG_CUSTOMVIEWEXAMPLE = "cudtomVieExample";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
                                              .setStyle(R.style.Dialog)
                                              .setPositiveButton()
                                              .build()
-                                             .show(getSupportFragmentManager(), "CUSTOM-DiAlOG");
+                                             .show(getSupportFragmentManager(), TAG_DIALOG_CUSTOMVIEWEXAMPLE);
+    }
+
+    @Override
+    public void onDialogClick(String tag, Bundle dialogArguments, int which) {
+        if (TAG_DIALOG_CUSTOMVIEWEXAMPLE.equals(tag)) {
+            log.debug("EXTRA_TEST_ARGUMENT: {}", dialogArguments.getString(DialogCustomViewExample.EXTRA_TEST_ARGUMENT));
+        }
     }
 }
