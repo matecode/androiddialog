@@ -9,7 +9,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVer
         targetSdkVersion rootProject.ext.targetSdkVer
         versionCode rootProject.ext.versionCodeInt
-        versionName "1.0" + versionCode
+        versionName rootProject.ext.versionNamePrefix + versionCode
     }
     buildTypes {
         release {

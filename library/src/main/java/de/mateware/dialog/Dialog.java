@@ -25,6 +25,10 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mateware.dialog.listener.DialogButtonListener;
+import de.mateware.dialog.listener.DialogCancelListener;
+import de.mateware.dialog.listener.DialogDismissListener;
+
 
 public class Dialog extends DialogFragment {
 
@@ -51,7 +55,7 @@ public class Dialog extends DialogFragment {
     public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
     public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
-    //public Bundle args = new Bundle();
+    Bundle additionalArguments = new Bundle();
     DialogButtonListener buttonListener;
     DialogDismissListener dismissListener;
     DialogCancelListener cancelListener;
@@ -63,25 +67,21 @@ public class Dialog extends DialogFragment {
 
     @Override
     public void show(@NonNull FragmentManager manager, String tag) {
-        //this.setArguments(args);
         super.show(manager, tag);
     }
 
     @Override
     public int show(@NonNull FragmentTransaction transaction, String tag) {
-        //this.setArguments(args);
         return super.show(transaction, tag);
     }
 
     public int showAllowStateLoss(@NonNull FragmentManager manager, String tag) {
-        //this.setArguments(args);
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(this, tag);
         return fragmentTransaction.commitAllowingStateLoss();
     }
 
     public int showAllowStateLoss(@NonNull FragmentTransaction transaction, String tag) {
-        //this.setArguments(args);
         return transaction.commitAllowingStateLoss();
     }
 
@@ -90,11 +90,10 @@ public class Dialog extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             log.trace("Button", which);
-            //Bundle additionalArguments = new Bundle();
-
-            //args.putAll(additionalArgumentsOnClick(additionalArguments, which));
+            Bundle dialogArguments = Dialog.this.getArguments();
+            dialogArguments.putAll(addArgumentsToDialogAfterButtonClick(dialogArguments, which));
             if (buttonListener != null)
-                buttonListener.onDialogClick(getTag(), Dialog.this.getArguments(), which);
+                buttonListener.onDialogClick(getTag(), dialogArguments, which);
             else
                 log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
                         .getSimpleName());
@@ -235,6 +234,9 @@ public class Dialog extends DialogFragment {
         return builder.create();
     }
 
+    public Bundle addArgumentsToDialogAfterButtonClick(Bundle dialogArguments, int which) {
+        return dialogArguments;
+    }
 
     protected boolean hasTimer() {
         return getArguments().containsKey(ARG_LONG_TIMER) && getArguments().getLong(ARG_LONG_TIMER, 0) > 0;
@@ -476,18 +478,4 @@ public class Dialog extends DialogFragment {
             super(Dialog.class);
         }
     }
-
-    public interface DialogButtonListener {
-
-        public void onDialogClick(String tag, Bundle arguments, int which);
-    }
-
-    public interface DialogDismissListener {
-        public void onDialogDismiss(String tag, Bundle arguments);
-    }
-
-    public interface DialogCancelListener {
-        public void onDialogCancel(String tag, Bundle arguments);
-    }
-
 }

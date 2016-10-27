@@ -4,7 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        //check here which version is needed for gradle Version: https://github.com/dcendents/android-maven-gradle-plugin#note-on-releases
     }
 }
 
@@ -21,7 +22,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVer
         targetSdkVersion rootProject.ext.targetSdkVer
         versionCode rootProject.ext.versionCodeInt
-        versionName "1.0" + versionCode
+        versionName rootProject.ext.versionNamePrefix + versionCode
     }
     buildTypes {
         release {

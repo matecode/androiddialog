@@ -2,10 +2,11 @@ package de.mateware.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.Bundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.mateware.dialog.listener.DialogListListener;
 
 /**
  * Created by Mate on 18.03.2015.
@@ -83,10 +84,6 @@ public class DialogList extends Dialog {
     protected String[] getItems()
     {
         return getArguments().getStringArray(ARG_ARRAY_STRING_ITEMS);
-    }
-
-    public interface DialogListListener {
-        public void onDialogListClick(String tag, Bundle arguments, int which, String value, String[] items);
     }
 
 }
