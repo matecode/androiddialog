@@ -1,37 +1,39 @@
 package de.mateware.dialog;
 
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Created by mate on 28.10.2016.
- */
 
-@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-public class Dialog extends DialogFragment implements BaseDialogInterface {
+public class SupportDialog extends DialogFragment implements BaseDialogInterface {
 
-    private static final Logger log = LoggerFactory.getLogger(Dialog.class);
+    BaseDialog<SupportAlertDialogBuilder, AppCompatDialog, SupportDialog> baseDialog;
 
-    BaseDialog<AlertDialogBuilder, android.app.Dialog, Dialog> baseDialog;
+    public final static int BUTTON_POSITIVE = DialogInterface.BUTTON_POSITIVE;
+    public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
+    public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
-    public Dialog() {
-        this.baseDialog = new BaseDialog<>(this);
+
+    public static Logger log = LoggerFactory.getLogger(SupportDialog.class);
+
+    public SupportDialog() {
+        baseDialog = new BaseDialog<>(this);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseDialog.onCreate(savedInstanceState);
     }
@@ -65,6 +67,7 @@ public class Dialog extends DialogFragment implements BaseDialogInterface {
         super.onDismiss(dialog);
     }
 
+
     @Override
     public void onCancel(DialogInterface dialog) {
         baseDialog.onCancel(dialog);
@@ -72,9 +75,9 @@ public class Dialog extends DialogFragment implements BaseDialogInterface {
     }
 
     @Override
-    public android.app.Dialog onCreateDialog(Bundle savedInstanceState) {
+    public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
         try {
-            return baseDialog.onCreateDialog(AlertDialogBuilder.class);
+            return baseDialog.onCreateDialog(SupportAlertDialogBuilder.class);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (java.lang.InstantiationException e) {
@@ -103,10 +106,10 @@ public class Dialog extends DialogFragment implements BaseDialogInterface {
         if (dialog != null) dialog.dismiss();
     }
 
-    public static class Builder extends BaseDialog.AbstractBaseBuilder<Builder, Dialog> {
+
+    public static class Builder extends BaseDialog.AbstractBaseBuilder<Builder, SupportDialog> {
         public Builder() {
-            super(Dialog.class);
+            super(SupportDialog.class);
         }
     }
-
 }
