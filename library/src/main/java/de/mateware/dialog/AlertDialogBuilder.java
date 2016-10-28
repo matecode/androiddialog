@@ -18,5 +18,4 @@ public class AlertDialogBuilder extends AlertDialog.Builder implements BaseAlert
     public AlertDialogBuilder(Context context, int themeResId) {
         super(context, themeResId);
     }
-
 }

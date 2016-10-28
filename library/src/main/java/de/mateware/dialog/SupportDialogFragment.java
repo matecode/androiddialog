@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 
 import org.slf4j.Logger;
@@ -17,23 +18,32 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 
 
-public class SupportDialog extends DialogFragment implements BaseDialogInterface {
+public class SupportDialogFragment<T extends Dialog> extends DialogFragment implements BaseDialogInterface {
 
-    BaseDialog<SupportAlertDialogBuilder, AppCompatDialog, SupportDialog> baseDialog;
+    public static Logger log = LoggerFactory.getLogger(SupportDialogFragment.class);
+    Dialog<SupportAlertDialogBuilder, AlertDialog, SupportDialogFragment<T>> baseDialog;
+    private static final String ARG_BASECLASS = "baseClass";
+    Class<T> dialogClass;
 
-    public final static int BUTTON_POSITIVE = DialogInterface.BUTTON_POSITIVE;
-    public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
-    public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
-
-
-    public static Logger log = LoggerFactory.getLogger(SupportDialog.class);
-
-    public SupportDialog() {
-        baseDialog = new BaseDialog<>(this);
+    void initBase(Class<T> clazz) {
+        dialogClass = clazz;
+        try {
+            baseDialog = clazz.newInstance();
+            baseDialog.setDialogFragment(this);
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            Class<T> clazz = (Class<T>) savedInstanceState.getSerializable(ARG_BASECLASS);
+            if (clazz != null) initBase(clazz);
+        }
+        if (baseDialog == null) throw new IllegalStateException("initBase must be called");
         super.onCreate(savedInstanceState);
         baseDialog.onCreate(savedInstanceState);
     }
@@ -44,8 +54,21 @@ public class SupportDialog extends DialogFragment implements BaseDialogInterface
         baseDialog.onResume();
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        baseDialog.onActivityCreated(savedInstanceState);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(ARG_BASECLASS, dialogClass);
         super.onSaveInstanceState(baseDialog.onSaveInstanceState(outState));
     }
 
@@ -55,11 +78,6 @@ public class SupportDialog extends DialogFragment implements BaseDialogInterface
         super.onPause();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        baseDialog.onAttach(context);
-    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
@@ -74,6 +92,7 @@ public class SupportDialog extends DialogFragment implements BaseDialogInterface
         super.onCancel(dialog);
     }
 
+    @NonNull
     @Override
     public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
         try {
@@ -104,12 +123,5 @@ public class SupportDialog extends DialogFragment implements BaseDialogInterface
         log.trace(dialogTag);
         DialogFragment dialog = (DialogFragment) fm.findFragmentByTag(dialogTag);
         if (dialog != null) dialog.dismiss();
-    }
-
-
-    public static class Builder extends BaseDialog.AbstractBaseBuilder<Builder, SupportDialog> {
-        public Builder() {
-            super(SupportDialog.class);
-        }
     }
 }

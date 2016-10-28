@@ -32,10 +32,9 @@ public class DialogCustomViewExample extends DialogCustomView {
         return dialogArguments;
     }
 
-    public static class Builder extends DialogCustomView.AbstractBuilder<Builder,DialogCustomViewExample> {
+    public static class Builder extends AbstractBuilder<Builder,DialogCustomViewExample>{
         public Builder() {
             super(DialogCustomViewExample.class);
         }
     }
-
 }

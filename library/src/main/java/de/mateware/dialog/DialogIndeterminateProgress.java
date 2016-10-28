@@ -10,13 +10,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
- * Created by mate on 21.10.2015.
+ * Created by Mate on 28.10.2016.
  */
+
 public class DialogIndeterminateProgress extends DialogCustomView {
 
     @Override
     public View getView(LayoutInflater inflater, ViewGroup parent) {
-
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -40,9 +40,11 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         return layout;
     }
 
-    public static class Builder extends Dialog.AbstractBuilder<Builder, DialogIndeterminateProgress> {
+    public static class Builder extends AbstractBaseBuilder<Builder,DialogIndeterminateProgress> {
+
         public Builder() {
             super(DialogIndeterminateProgress.class);
         }
     }
+
 }
