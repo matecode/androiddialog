@@ -38,36 +38,40 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
     private static final Logger log = LoggerFactory.getLogger(Dialog.class);
 
-    static final String ARG_INT_STYLE = "style";
-    static final String ARG_INT_TITLE = "title_resid";
-    static final String ARG_STRING_TITLE = "title_text";
+    private static final String ARG_INT_STYLE = "style";
+    private static final String ARG_INT_TITLE = "title_resid";
+    private static final String ARG_STRING_TITLE = "title_text";
 
-    static final String ARG_INT_MESSAGE = "message_resid";
-    static final String ARG_STRING_MESSAGE = "message";
+    private static final String ARG_INT_MESSAGE = "message_resid";
+    private static final String ARG_STRING_MESSAGE = "message";
 
-    static final String ARG_INT_ICONID = "icon_id";
+    private static final String ARG_INT_ICONID = "icon_id";
 
-    static final String ARG_LONG_TIMER = "timer";
+    private static final String ARG_LONG_TIMER = "timer";
 
 
-    static final String ARG_INT_BUTTONTEXTPOSITIVE = "positive_button_resid";
-    static final String ARG_INT_BUTTONTEXTNEGATIVE = "negative_button_resid";
-    static final String ARG_INT_BUTTONTEXTNEUTRAL = "neutral_button_resid";
-    static final String ARG_STRING_BUTTONTEXTPOSITIVE = "positive_button_text";
-    static final String ARG_STRING_BUTTONTEXTNEGATIVE = "negative_button_text";
-    static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
+    private static final String ARG_INT_BUTTONTEXTPOSITIVE = "positive_button_resid";
+    private static final String ARG_INT_BUTTONTEXTNEGATIVE = "negative_button_resid";
+    private static final String ARG_INT_BUTTONTEXTNEUTRAL = "neutral_button_resid";
+    private static final String ARG_STRING_BUTTONTEXTPOSITIVE = "positive_button_text";
+    private static final String ARG_STRING_BUTTONTEXTNEGATIVE = "negative_button_text";
+    private static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
+
+    public final static int BUTTON_POSITIVE = DialogInterface.BUTTON_POSITIVE;
+    public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
+    public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
     private M dialogFragment;
     public T builder;
 
-    CountDownTimer timer;
-    long timermillis;
+    private CountDownTimer timer;
+    private long timermillis;
 
-    DialogButtonListener buttonListener;
-    DialogDismissListener dismissListener;
-    DialogCancelListener cancelListener;
+    private DialogButtonListener buttonListener;
+    private DialogDismissListener dismissListener;
+    private DialogCancelListener cancelListener;
 
-    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+    private DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -106,7 +110,9 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         return dialogFragment.getDialog();
     }
 
-    protected int getTheme(){return dialogFragment.getTheme();}
+    protected int getTheme() {
+        return dialogFragment.getTheme();
+    }
 
 
     protected int getStyle() {
@@ -170,7 +176,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
         else if (getArguments().containsKey(arg_int))
             result = getContext()
-                                   .getString(getArguments().getInt(arg_int));
+                    .getString(getArguments().getInt(arg_int));
         return result;
     }
 
@@ -236,7 +242,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
                         timerText = new TextView(getContext());
                         FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
                         getDialog()
-                                      .addContentView(timerText, lp);
+                                .addContentView(timerText, lp);
                     }
                     timermillis = millisUntilFinished;
                     timerText.setText(getTimerText(millisUntilFinished));
@@ -280,14 +286,14 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
     public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
         int margin = getContext()
-                                   .getResources()
-                                   .getDimensionPixelSize(R.dimen.custom_dialog_padding);
+                .getResources()
+                .getDimensionPixelSize(R.dimen.custom_dialog_padding);
         int topMargin = getContext()
-                                      .getResources()
-                                      .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
+                .getResources()
+                .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
         int textPadding = getContext()
-                                        .getResources()
-                                        .getDimensionPixelSize(R.dimen.text_padding_timer);
+                .getResources()
+                .getDimensionPixelSize(R.dimen.text_padding_timer);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, textPadding, textPadding, 0);
 
@@ -297,10 +303,10 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         timerTextView.setPadding(textPadding, 0, textPadding, 0);
 
         timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources()
-                                                                            .getDimension(R.dimen.text_size_timer));
+                .getDimension(R.dimen.text_size_timer));
 
         TypedArray a = getContext()
-                                     .obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
+                .obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
 
         int attributeResourceId = a.getResourceId(0, 0);
         a.recycle();
@@ -353,7 +359,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public android.app.Dialog manipulateDialog(android.app.Dialog dialog) {
-       return dialog;
+        return dialog;
     }
 
     public void setDialogContent() {
