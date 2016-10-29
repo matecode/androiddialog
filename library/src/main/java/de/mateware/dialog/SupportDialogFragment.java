@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.mateware.dialog.base.BaseDialogInterface;
+import de.mateware.dialog.base.SupportAlertDialogBuilder;
+
 
 public class SupportDialogFragment<T extends Dialog> extends DialogFragment implements BaseDialogInterface {
 
@@ -43,7 +46,8 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
             Class<T> clazz = (Class<T>) savedInstanceState.getSerializable(ARG_BASECLASS);
             if (clazz != null) initBase(clazz);
         }
-        if (baseDialog == null) throw new IllegalStateException("initBase must be called");
+        if (baseDialog == null)
+            throw new IllegalStateException("initBase must be called, cannot be initialized from outside library");
         super.onCreate(savedInstanceState);
         baseDialog.onCreate(savedInstanceState);
     }

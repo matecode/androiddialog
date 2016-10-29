@@ -40,7 +40,7 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         return layout;
     }
 
-    public static class Builder extends AbstractBaseBuilder<Builder,DialogIndeterminateProgress> {
+    public static class Builder extends AbstractBuilder<Builder,DialogIndeterminateProgress> {
 
         public Builder() {
             super(DialogIndeterminateProgress.class);

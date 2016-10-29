@@ -11,9 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import de.mateware.dialog.Dialog;
 import de.mateware.dialog.DialogIndeterminateProgress;
+import de.mateware.dialog.DialogList;
 import de.mateware.dialog.listener.DialogButtonListener;
+import de.mateware.dialog.listener.DialogListListener;
 
-public class MainActivity extends AppCompatActivity implements DialogButtonListener {
+public class MainActivity extends AppCompatActivity implements DialogButtonListener, DialogListListener {
 
     private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
 
@@ -45,12 +47,6 @@ public class MainActivity extends AppCompatActivity implements DialogButtonListe
                                                  .setTimer(15000)
                                                  .buildSupport()
                                                  .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
-
-//        new DialogIndeterminateProgress().withMessage("And the wheel goes round and round and round")
-//                                         .withStyle(R.style.Dialog)
-//                                         .withCancelable(false)
-//                                         .withTimer(15000)
-//                                         .show(getSupportFragmentManager(), "PROGRESS_DIALOG");
     }
 
     public void customView(View view) {
@@ -61,10 +57,23 @@ public class MainActivity extends AppCompatActivity implements DialogButtonListe
                                              .show(getSupportFragmentManager(), TAG_DIALOG_CUSTOMVIEWEXAMPLE);
     }
 
+    public void list(View view) {
+        new DialogList.Builder().setTitle("List")
+                                .setList("Item1", "Item2", "Item3")
+                                .buildSupport()
+                                .show(getSupportFragmentManager(), "DIALOG_LIST");
+    }
+
     @Override
     public void onDialogClick(String tag, Bundle dialogArguments, int which) {
+        log.debug("tag: {}, dialogArguments: {}, which: {}",tag, dialogArguments, which);
         if (TAG_DIALOG_CUSTOMVIEWEXAMPLE.equals(tag)) {
             log.debug("EXTRA_TEST_ARGUMENT: {}", dialogArguments.getString(DialogCustomViewExample.EXTRA_TEST_ARGUMENT));
         }
+    }
+
+    @Override
+    public void onDialogListClick(String tag, Bundle arguments, int which, String value, String[] items) {
+        log.debug("tag: {}, arguments: {}, which: {}, value: {}, items: {}",tag, arguments, which, value, items);
     }
 }

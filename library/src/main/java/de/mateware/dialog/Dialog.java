@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.mateware.dialog.base.BaseAlertDialogBuilderInterface;
+import de.mateware.dialog.base.BaseDialogInterface;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogCancelListener;
 import de.mateware.dialog.listener.DialogDismissListener;
@@ -56,7 +58,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
     static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
 
     private M dialogFragment;
-    private T builder;
+    public T builder;
 
     CountDownTimer timer;
     long timermillis;
@@ -73,10 +75,10 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
             Bundle dialogArguments = getArguments();
             dialogArguments.putAll(addArgumentsToDialogAfterButtonClick(dialogArguments, which));
             if (buttonListener != null)
-                buttonListener.onDialogClick(dialogFragment.getTag(), dialogArguments, which);
+                buttonListener.onDialogClick(getTag(), dialogArguments, which);
             else
                 log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
-                                                                                                             .getSimpleName());
+                                                                                                            .getSimpleName());
         }
     };
 
@@ -95,6 +97,17 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
     protected Resources getResources() {
         return dialogFragment.getResources();
     }
+
+    protected String getTag() {
+        return dialogFragment.getTag();
+    }
+
+    protected android.app.Dialog getDialog() {
+        return dialogFragment.getDialog();
+    }
+
+    protected int getTheme(){return dialogFragment.getTheme();}
+
 
     protected int getStyle() {
         return getArguments().getInt(ARG_INT_STYLE, 0);
@@ -156,7 +169,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
         String result = null;
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
         else if (getArguments().containsKey(arg_int))
-            result = dialogFragment.getContext()
+            result = getContext()
                                    .getString(getArguments().getInt(arg_int));
         return result;
     }
@@ -167,46 +180,46 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
     }
 
     public void onActivityCreated(Bundle saveInstanceState) {
-        log.debug("saveInstanceState: {}",saveInstanceState);
-            try {
-                buttonListener = (DialogButtonListener) getContext();
-            } catch (ClassCastException e) {
-                log.warn(e.getMessage());
-            }
-            try {
-                dismissListener = (DialogDismissListener) getContext();
-            } catch (ClassCastException e) {
-                log.warn(e.getMessage());
-            }
-            try {
-                cancelListener = (DialogCancelListener) getContext();
-            } catch (ClassCastException e) {
-                log.warn(e.getMessage());
-            }
+        log.debug("saveInstanceState: {}", saveInstanceState);
+        try {
+            buttonListener = (DialogButtonListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
+        try {
+            dismissListener = (DialogDismissListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
+        try {
+            cancelListener = (DialogCancelListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
 
     }
 
     public void onDismiss(DialogInterface dialog) {
-        if (dialogFragment.getTag() != null) {
-            log.trace(dialogFragment.getTag());
+        if (getTag() != null) {
+            log.trace(getTag());
             if (dismissListener != null)
-                dismissListener.onDialogDismiss(dialogFragment.getTag(), getArguments());
+                dismissListener.onDialogDismiss(getTag(), getArguments());
             else
-                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + dialogFragment.getContext()
-                                                                                                               .getClass()
-                                                                                                               .getSimpleName());
+                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity "
+                        + getContext().getClass()
+                                      .getSimpleName());
         }
     }
 
     public void onCancel(DialogInterface dialog) {
-        if (dialogFragment.getTag() != null) {
-            log.trace(dialogFragment.getTag());
+        if (getTag() != null) {
+            log.trace(getTag());
             if (cancelListener != null)
-                cancelListener.onDialogCancel(dialogFragment.getTag(), getArguments());
+                cancelListener.onDialogCancel(getTag(), getArguments());
             else
-                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + dialogFragment.getContext()
-                                                                                                              .getClass()
-                                                                                                              .getSimpleName());
+                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity "
+                        + getContext().getClass()
+                                      .getSimpleName());
         }
     }
 
@@ -220,9 +233,9 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
                 public void onTick(long millisUntilFinished) {
                     log.debug("millisUntilFinished: {}", millisUntilFinished);
                     if (timerText == null) {
-                        timerText = new TextView(dialogFragment.getContext());
+                        timerText = new TextView(getContext());
                         FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
-                        dialogFragment.getDialog()
+                        getDialog()
                                       .addContentView(timerText, lp);
                     }
                     timermillis = millisUntilFinished;
@@ -266,13 +279,13 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
     }
 
     public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
-        int margin = dialogFragment.getContext()
+        int margin = getContext()
                                    .getResources()
                                    .getDimensionPixelSize(R.dimen.custom_dialog_padding);
-        int topMargin = dialogFragment.getContext()
+        int topMargin = getContext()
                                       .getResources()
                                       .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
-        int textPadding = dialogFragment.getContext()
+        int textPadding = getContext()
                                         .getResources()
                                         .getDimensionPixelSize(R.dimen.text_padding_timer);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -283,16 +296,16 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
 
         timerTextView.setPadding(textPadding, 0, textPadding, 0);
 
-        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dialogFragment.getResources()
+        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources()
                                                                             .getDimension(R.dimen.text_size_timer));
 
-        TypedArray a = dialogFragment.getContext()
-                                     .obtainStyledAttributes(dialogFragment.getTheme(), new int[]{R.attr.colorPrimary});
+        TypedArray a = getContext()
+                                     .obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
 
         int attributeResourceId = a.getResourceId(0, 0);
         a.recycle();
 
-        int bgcolor = ContextCompat.getColor(dialogFragment.getContext(), attributeResourceId);
+        int bgcolor = ContextCompat.getColor(getContext(), attributeResourceId);
         double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
         int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
 
@@ -308,7 +321,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
     public K onCreateDialog(Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 
         builder = clazz.getDeclaredConstructor(Context.class, int.class)
-                       .newInstance(dialogFragment.getContext(), getStyle());
+                       .newInstance(getContext(), getStyle());
 
         if (hasIcon()) builder.setIcon(getIcon());
 
@@ -325,7 +338,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
         Object dialog = builder.create();
 
         View addView = addView();
-        if (addView!=null) {
+        if (addView != null) {
             if (dialog instanceof android.support.v7.app.AlertDialog) {
                 ((android.support.v7.app.AlertDialog) dialog).setView(addView);
             } else if (dialog instanceof android.app.AlertDialog) {
@@ -348,13 +361,13 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
         return dialogArguments;
     }
 
-    static class AbstractBaseBuilder<T extends AbstractBaseBuilder,K extends Dialog> {
+    static class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
         Bundle builderArgs = new Bundle();
         boolean cancelable = true;
 
         private Class<K> dialogBaseClass;
 
-        public AbstractBaseBuilder(Class<K> dialogBaseClass) {
+        public AbstractBuilder(Class<K> dialogBaseClass) {
             this.dialogBaseClass = dialogBaseClass;
         }
 
@@ -479,7 +492,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
 
     }
 
-    public static class Builder extends AbstractBaseBuilder<Builder,Dialog> {
+    public static class Builder extends AbstractBuilder<Builder, Dialog> {
         public Builder() {
             super(Dialog.class);
         }

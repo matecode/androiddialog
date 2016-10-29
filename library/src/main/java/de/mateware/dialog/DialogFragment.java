@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
+import de.mateware.dialog.base.AlertDialogBuilder;
+import de.mateware.dialog.base.BaseDialogInterface;
+
 /**
  * Created by mate on 28.10.2016.
  */
@@ -45,7 +48,8 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
             Class<T> clazz = (Class<T>) savedInstanceState.getSerializable(ARG_BASECLASS);
             if (clazz != null) initBase(clazz);
         }
-        if (baseDialog == null) throw new IllegalStateException("initBase must be called");
+        if (baseDialog == null)
+            throw new IllegalStateException("initBase must be called, cannot be initialized from outside library");
         super.onCreate(savedInstanceState);
         baseDialog.onCreate(savedInstanceState);
     }

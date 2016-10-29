@@ -22,7 +22,7 @@ public abstract class DialogCustomView extends Dialog {
 
     public abstract View getView(LayoutInflater inflater, ViewGroup parent);
 
-    public static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogCustomView> extends AbstractBaseBuilder<T,K> {
+    public static abstract class AbstractBuilder<T extends AbstractBuilder,K extends DialogCustomView> extends Dialog.AbstractBuilder<T,K> {
         public AbstractBuilder(Class<K> dialogBaseClass) {
             super(dialogBaseClass);
         }

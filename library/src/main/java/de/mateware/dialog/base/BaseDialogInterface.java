@@ -1,4 +1,4 @@
-package de.mateware.dialog;
+package de.mateware.dialog.base;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -29,6 +29,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="List Dialog"
+        android:onClick="list"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Custom View"
         android:onClick="customView"/>
 
