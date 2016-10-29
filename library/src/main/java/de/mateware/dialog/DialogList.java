@@ -53,7 +53,7 @@ public class DialogList extends Dialog {
     }
 
     @Override
-    void setDialogContent() {
+    public void setDialogContent() {
         if (hasItems()) builder.setItems(getItems(), onClickListener);
         super.setDialogContent();
     }

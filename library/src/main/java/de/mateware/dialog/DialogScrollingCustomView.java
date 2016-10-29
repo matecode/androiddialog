@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 public abstract class DialogScrollingCustomView extends DialogCustomView {
 
     @Override
-    protected View addView() {
+    public View addView() {
         ScrollView scroll = new ScrollView(getContext());
         scroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         int padding = getContext().getResources()

@@ -36,8 +36,8 @@ public abstract class DialogAdapterList extends Dialog {
     };
 
     @Override
-    void setDialogContent() {
-        builder.setAdapter(getAdapter(), onClickListener);
+    public void setDialogContent() {
+        builder.setAdapter(getAdapter(),onClickListener);
     }
 
     public abstract ListAdapter getAdapter();

@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 public abstract class DialogCustomView extends Dialog {
 
     @Override
-    void setDialogContent() {
+    public void setDialogContent() {
         //do nothing
     }
 
     @Override
-    protected View addView() {
+    public View addView() {
         return getView(LayoutInflater.from(getContext()), null);
     }
 

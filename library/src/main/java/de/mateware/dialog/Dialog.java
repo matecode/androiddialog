@@ -34,7 +34,7 @@ import de.mateware.dialog.listener.DialogDismissListener;
  * Created by mate on 28.10.2016.
  */
 
-public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends BaseDialogInterface> {
+public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android.app.Dialog, M extends BaseDialogInterface> {
 
     private static final Logger log = LoggerFactory.getLogger(Dialog.class);
 
@@ -345,15 +345,18 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K, M extends Base
                 ((android.app.AlertDialog) dialog).setView(addView);
             }
         }
-        return (K) dialog;
-
+        return (K) manipulateDialog((android.app.Dialog) dialog);
     }
 
-    protected View addView() {
+    public View addView() {
         return null;
     }
 
-    void setDialogContent() {
+    public android.app.Dialog manipulateDialog(android.app.Dialog dialog) {
+       return dialog;
+    }
+
+    public void setDialogContent() {
         if (hasMessage()) builder.setMessage(getMessage());
     }
 
