@@ -512,4 +512,18 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             super(Dialog.class);
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    public static void dismissDialog(android.app.FragmentManager fm, String dialogTag) {
+        log.trace(dialogTag);
+        android.app.DialogFragment dialog = (android.app.DialogFragment) fm.findFragmentByTag(dialogTag);
+        if (dialog != null) dialog.dismiss();
+    }
+
+    public static void dismissDialog(android.support.v4.app.FragmentManager fm, String dialogTag) {
+        log.trace(dialogTag);
+        android.support.v4.app.DialogFragment dialog = (android.support.v4.app.DialogFragment) fm.findFragmentByTag(dialogTag);
+        if (dialog != null) dialog.dismiss();
+    }
+
 }

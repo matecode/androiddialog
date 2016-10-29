@@ -122,10 +122,4 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
     public int showAllowStateLoss(@NonNull FragmentTransaction transaction, String tag) {
         return transaction.commitAllowingStateLoss();
     }
-
-    public static void dismissDialog(FragmentManager fm, String dialogTag) {
-        log.trace(dialogTag);
-        DialogFragment dialog = (DialogFragment) fm.findFragmentByTag(dialogTag);
-        if (dialog != null) dialog.dismiss();
-    }
 }
