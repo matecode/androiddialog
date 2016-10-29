@@ -476,8 +476,13 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 //            return null;
 //        }
 
+        public void preBuild() {
+
+        }
+
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public DialogFragment build() {
+            preBuild();
             DialogFragment result = new DialogFragment();
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
@@ -486,6 +491,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         }
 
         public SupportDialogFragment buildSupport() {
+            preBuild();
             SupportDialogFragment result = new SupportDialogFragment();
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
