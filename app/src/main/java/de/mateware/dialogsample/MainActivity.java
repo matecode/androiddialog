@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import de.mateware.dialog.Dialog;
 import de.mateware.dialog.DialogIndeterminateProgress;
 import de.mateware.dialog.DialogList;
+import de.mateware.dialog.LicenceDialog;
+import de.mateware.dialog.licences.ApacheLicence20;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogListListener;
 
@@ -64,9 +66,18 @@ public class MainActivity extends AppCompatActivity implements DialogButtonListe
                                 .show(getSupportFragmentManager(), "DIALOG_LIST");
     }
 
+    public void licence(View view) {
+        new LicenceDialog.Builder().setTitle("Open Source Lizenzen")
+                                   .addEntry(new ApacheLicence20(this, "Project1","Mate",2014))
+                                   .addEntry(new ApacheLicence20(this, "Project2","Peter",2013))
+                                   .addEntry(new ApacheLicence20(this, "Project3","Stefan",2012))
+                                   .buildSupport()
+                                   .show(getSupportFragmentManager(), "LICENCESDIALOG");
+    }
+
     @Override
     public void onDialogClick(String tag, Bundle dialogArguments, int which) {
-        log.debug("tag: {}, dialogArguments: {}, which: {}",tag, dialogArguments, which);
+        log.debug("tag: {}, dialogArguments: {}, which: {}", tag, dialogArguments, which);
         if (TAG_DIALOG_CUSTOMVIEWEXAMPLE.equals(tag)) {
             log.debug("EXTRA_TEST_ARGUMENT: {}", dialogArguments.getString(DialogCustomViewExample.EXTRA_TEST_ARGUMENT));
         }
@@ -74,6 +85,6 @@ public class MainActivity extends AppCompatActivity implements DialogButtonListe
 
     @Override
     public void onDialogListClick(String tag, Bundle arguments, int which, String value, String[] items) {
-        log.debug("tag: {}, arguments: {}, which: {}, value: {}, items: {}",tag, arguments, which, value, items);
+        log.debug("tag: {}, arguments: {}, which: {}, value: {}, items: {}", tag, arguments, which, value, items);
     }
 }

@@ -2,9 +2,7 @@ package de.mateware.dialog;
 
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,10 +11,10 @@ import android.widget.TextView;
  * Created by Mate on 28.10.2016.
  */
 
-public class DialogIndeterminateProgress extends DialogCustomView {
+public class DialogIndeterminateProgress extends Dialog {
 
     @Override
-    public View getView(LayoutInflater inflater, ViewGroup parent) {
+    public View addView() {
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -40,8 +38,14 @@ public class DialogIndeterminateProgress extends DialogCustomView {
         return layout;
     }
 
-    public static class Builder extends AbstractBuilder<Builder,DialogIndeterminateProgress> {
+    public static class AbstractBuilder<T extends Dialog.AbstractBuilder, K extends Dialog> extends Dialog.AbstractBuilder<T,K> {
 
+        public AbstractBuilder(Class<K> dialogBaseClass) {
+            super(dialogBaseClass);
+        }
+    }
+
+    public static class Builder extends AbstractBuilder<Builder,DialogIndeterminateProgress> {
         public Builder() {
             super(DialogIndeterminateProgress.class);
         }
