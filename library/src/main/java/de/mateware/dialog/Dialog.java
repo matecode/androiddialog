@@ -1,23 +1,20 @@
 package de.mateware.dialog;
 
-
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,222 +22,127 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+
+import de.mateware.dialog.base.BaseAlertDialogBuilderInterface;
+import de.mateware.dialog.base.BaseDialogInterface;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogCancelListener;
 import de.mateware.dialog.listener.DialogDismissListener;
 
+/**
+ * Created by mate on 28.10.2016.
+ */
 
-public class Dialog extends DialogFragment {
+public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android.app.Dialog, M extends BaseDialogInterface> {
 
-    static final String ARG_INT_TITLE = "title_resid";
-    static final String ARG_STRING_TITLE = "title_text";
+    private static final Logger log = LoggerFactory.getLogger(Dialog.class);
 
-    static final String ARG_INT_MESSAGE = "message_resid";
-    static final String ARG_STRING_MESSAGE = "message";
+    private static final String ARG_INT_STYLE = "style";
+    private static final String ARG_INT_TITLE = "title_resid";
+    private static final String ARG_STRING_TITLE = "title_text";
 
-    static final String ARG_INT_ICONID = "icon_id";
+    private static final String ARG_INT_MESSAGE = "message_resid";
+    private static final String ARG_STRING_MESSAGE = "message";
 
-    static final String ARG_LONG_TIMER = "timer";
+    private static final String ARG_INT_ICONID = "icon_id";
 
-    static final String ARG_INT_STYLE = "style";
+    private static final String ARG_LONG_TIMER = "timer";
 
-    static final String ARG_INT_BUTTONTEXTPOSITIVE = "positive_button_resid";
-    static final String ARG_INT_BUTTONTEXTNEGATIVE = "negative_button_resid";
-    static final String ARG_INT_BUTTONTEXTNEUTRAL = "neutral_button_resid";
-    static final String ARG_STRING_BUTTONTEXTPOSITIVE = "positive_button_text";
-    static final String ARG_STRING_BUTTONTEXTNEGATIVE = "negative_button_text";
-    static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
+
+    private static final String ARG_INT_BUTTONTEXTPOSITIVE = "positive_button_resid";
+    private static final String ARG_INT_BUTTONTEXTNEGATIVE = "negative_button_resid";
+    private static final String ARG_INT_BUTTONTEXTNEUTRAL = "neutral_button_resid";
+    private static final String ARG_STRING_BUTTONTEXTPOSITIVE = "positive_button_text";
+    private static final String ARG_STRING_BUTTONTEXTNEGATIVE = "negative_button_text";
+    private static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
+
+    protected static final String ARG_INT_TOPPADDING = "toppadding";
+    protected static final String ARG_INT_BOTTOMPADDING = "bottompadding";
+    protected static final String ARG_INT_LEFTPADDING = "leftpadding";
+    protected static final String ARG_INT_RIGHTPADDING = "rightpadding";
 
     public final static int BUTTON_POSITIVE = DialogInterface.BUTTON_POSITIVE;
     public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
     public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
-    Bundle additionalArguments = new Bundle();
-    DialogButtonListener buttonListener;
-    DialogDismissListener dismissListener;
-    DialogCancelListener cancelListener;
-    CountDownTimer timer;
-    long timermillis;
+    private M dialogFragment;
 
-    public static Logger log = LoggerFactory.getLogger(Dialog.class);
+    public T builder;
 
+    private CountDownTimer timer;
+    private long timermillis;
 
-    @Override
-    public void show(@NonNull FragmentManager manager, String tag) {
-        super.show(manager, tag);
-    }
+    private DialogButtonListener buttonListener;
+    private DialogDismissListener dismissListener;
+    private DialogCancelListener cancelListener;
 
-    @Override
-    public int show(@NonNull FragmentTransaction transaction, String tag) {
-        return super.show(transaction, tag);
-    }
-
-    public int showAllowStateLoss(@NonNull FragmentManager manager, String tag) {
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.add(this, tag);
-        return fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    public int showAllowStateLoss(@NonNull FragmentTransaction transaction, String tag) {
-        return transaction.commitAllowingStateLoss();
-    }
-
-    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+    private DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
             log.trace("Button", which);
-            Bundle dialogArguments = Dialog.this.getArguments();
+            Bundle dialogArguments = getArguments();
             dialogArguments.putAll(addArgumentsToDialogAfterButtonClick(dialogArguments, which));
             if (buttonListener != null)
                 buttonListener.onDialogClick(getTag(), dialogArguments, which);
             else
-                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                        .getSimpleName());
+                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                            .getSimpleName());
         }
     };
 
-    AlertDialog.Builder builder;
-
-
-    @Override
-    public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
-        log.trace(this.getTag());
-
-        builder = new AlertDialog.Builder(getActivity(), getStyle());
-
-        if (hasIcon()) builder.setIcon(getIcon());
-
-        if (hasTitle()) builder.setTitle(getTitle());
-
-        setDialogContent();
-
-        if (hasPositiveButton()) builder.setPositiveButton(getPositiveButton(), onClickListener);
-
-        if (hasNeutralButton()) builder.setNeutralButton(getNeutralButton(), onClickListener);
-
-        if (hasNegativeButton()) builder.setNegativeButton(getNegativeButton(), onClickListener);
-
-        AppCompatDialog dialog = createDialogToReturn();
-
-        return dialog;
+    void setDialogFragment(M dialogFragment) {
+        this.dialogFragment = dialogFragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        timermillis = getArguments().getLong(ARG_LONG_TIMER, 0);
-        if (savedInstanceState != null) timermillis = savedInstanceState.getLong(ARG_LONG_TIMER, 0);
+    protected Bundle getArguments() {
+        return dialogFragment.getArguments();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getTimerMillis() > 0) {
-            timer = new CountDownTimer(getTimerMillis(), 100) {
-
-                TextView timerText;
-
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    log.debug("millisUntilFinished: {}", millisUntilFinished);
-                    if (timerText == null) {
-                        timerText = new TextView(getContext());
-                        FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
-                        getDialog().addContentView(timerText, lp);
-                    }
-                    timermillis = millisUntilFinished;
-                    timerText.setText(getTimerText(millisUntilFinished));
-                }
-
-                @Override
-                public void onFinish() {
-                    log.debug("Finished timer with millis {}", timermillis);
-                    timermillis = 0;
-                    timerText.setText(getTimerText(0));
-                    onTimerFinished();
-                }
-            };
-            timer.start();
-        }
-
+    protected Context getContext() {
+        return dialogFragment.getContext();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(ARG_LONG_TIMER, timermillis);
-        super.onSaveInstanceState(outState);
+    protected Resources getResources() {
+        return dialogFragment.getResources();
     }
 
-    public String getTimerText(long millisUntilFinished) {
-        return String.valueOf(Math.round(((double) millisUntilFinished) / 1000));
+    protected String getTag() {
+        return dialogFragment.getTag();
     }
 
-    public long getTimerMillis() {
-        return timermillis;
+    protected android.app.Dialog getDialog() {
+        return dialogFragment.getDialog();
     }
 
-    public void onTimerFinished() {
-        dismiss();
+    protected int getTheme() {
+        return dialogFragment.getTheme();
     }
 
-    public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
-        int margin = getContext().getResources()
-                .getDimensionPixelSize(R.dimen.custom_dialog_padding);
-        int topMargin = getContext().getResources()
-                .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
-        int textPadding = getContext().getResources().getDimensionPixelSize(R.dimen.text_padding_timer);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, textPadding, textPadding, 0);
 
-
-        params.gravity = Gravity.END | Gravity.TOP;
-
-        timerTextView.setPadding(textPadding, 0, textPadding, 0);
-
-        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_timer));
-
-        TypedArray a = getContext().obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
-
-        int attributeResourceId = a.getResourceId(0, 0);
-        a.recycle();
-
-        int bgcolor = ContextCompat.getColor(getContext(), attributeResourceId);
-        double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
-        int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
-
-        timerTextView.setBackgroundColor(bgcolor);
-        timerTextView.setTextColor(textColor);
-
-        //timerTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-
-        return params;
-    }
-
-    @Override
-    public void onPause() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        super.onPause();
-    }
-
-    void setDialogContent() {
-        if (hasMessage()) builder.setMessage(getMessage());
-    }
-
-    protected AppCompatDialog createDialogToReturn() {
-        return builder.create();
-    }
-
-    public Bundle addArgumentsToDialogAfterButtonClick(Bundle dialogArguments, int which) {
-        return dialogArguments;
+    protected int getStyle() {
+        return getArguments().getInt(ARG_INT_STYLE, 0);
     }
 
     protected boolean hasTimer() {
         return getArguments().containsKey(ARG_LONG_TIMER) && getArguments().getLong(ARG_LONG_TIMER, 0) > 0;
     }
+
+    protected int getTopPadding() {
+        return getArguments().getInt(ARG_INT_TOPPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding_top));
+    }
+    protected int getBottomPadding() {
+        return getArguments().getInt(ARG_INT_BOTTOMPADDING, hasButton() ? 0 : getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+    protected int getLeftPadding() {
+        return getArguments().getInt(ARG_INT_LEFTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+    protected int getRightPadding() {
+        return getArguments().getInt(ARG_INT_RIGHTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+
+
 
     protected boolean hasTitle() {
         return (getArguments().containsKey(ARG_STRING_TITLE) || getArguments().containsKey(ARG_INT_TITLE));
@@ -290,85 +192,201 @@ public class Dialog extends DialogFragment {
         return getText(ARG_STRING_BUTTONTEXTNEUTRAL, ARG_INT_BUTTONTEXTNEUTRAL);
     }
 
+    protected boolean hasButton() {
+        return hasPositiveButton() || hasNegativeButton() || hasNeutralButton();
+    }
+
     protected String getText(String arg_string, String arg_int) {
         String result = null;
         if (getArguments().containsKey(arg_string)) result = getArguments().getString(arg_string);
         else if (getArguments().containsKey(arg_int))
-            result = getString(getArguments().getInt(arg_int));
+            result = getContext()
+                    .getString(getArguments().getInt(arg_int));
         return result;
     }
 
-    protected int getStyle() {
-        return getArguments().getInt(ARG_INT_STYLE, 0);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        timermillis = getArguments().getLong(ARG_LONG_TIMER, 0);
+        if (savedInstanceState != null) timermillis = savedInstanceState.getLong(ARG_LONG_TIMER, 0);
     }
 
+    public void onActivityCreated(Bundle saveInstanceState) {
+        log.debug("saveInstanceState: {}", saveInstanceState);
+        try {
+            buttonListener = (DialogButtonListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
+        try {
+            dismissListener = (DialogDismissListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
+        try {
+            cancelListener = (DialogCancelListener) getContext();
+        } catch (ClassCastException e) {
+            log.warn(e.getMessage());
+        }
 
-    @Override
-    public void onAttach(Activity activity) {
-        log.trace(this.getTag());
-        super.onAttach(activity);
-        try {
-            buttonListener = (DialogButtonListener) activity;
-        } catch (ClassCastException e) {
-            log.warn(e.getMessage());
-        }
-        try {
-            dismissListener = (DialogDismissListener) activity;
-        } catch (ClassCastException e) {
-            log.warn(e.getMessage());
-        }
-        try {
-            cancelListener = (DialogCancelListener) activity;
-        } catch (ClassCastException e) {
-            log.warn(e.getMessage());
-        }
     }
 
-    @Override
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
             if (dismissListener != null)
-                dismissListener.onDialogDismiss(getTag(), Dialog.this.getArguments());
+                dismissListener.onDialogDismiss(getTag(), getArguments());
             else
-                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                        .getSimpleName());
+                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity "
+                        + getContext().getClass()
+                                      .getSimpleName());
         }
-        super.onDismiss(dialog);
     }
 
-    @Override
     public void onCancel(DialogInterface dialog) {
         if (getTag() != null) {
             log.trace(getTag());
             if (cancelListener != null)
-                cancelListener.onDialogCancel(getTag(), Dialog.this.getArguments());
+                cancelListener.onDialogCancel(getTag(), getArguments());
             else
-                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getActivity().getClass()
-                        .getSimpleName());
+                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity "
+                        + getContext().getClass()
+                                      .getSimpleName());
         }
-        super.onCancel(dialog);
+    }
+
+    public void onResume() {
+        if (getTimerMillis() > 0) {
+            timer = new CountDownTimer(getTimerMillis(), 100) {
+
+                TextView timerText;
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    log.debug("millisUntilFinished: {}", millisUntilFinished);
+                    if (timerText == null) {
+                        timerText = new TextView(getContext());
+                        FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
+                        getDialog()
+                                .addContentView(timerText, lp);
+                    }
+                    timermillis = millisUntilFinished;
+                    timerText.setText(getTimerText(millisUntilFinished));
+                }
+
+                @Override
+                public void onFinish() {
+                    log.debug("Finished timer with millis {}", timermillis);
+                    timermillis = 0;
+                    timerText.setText(getTimerText(0));
+                    onTimerFinished();
+                }
+            };
+            timer.start();
+        }
+    }
+
+    public void onPause() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public Bundle onSaveInstanceState(Bundle outState) {
+        outState.putLong(ARG_LONG_TIMER, timermillis);
+        return outState;
+    }
+
+    public String getTimerText(long millisUntilFinished) {
+        return String.valueOf(Math.round(((double) millisUntilFinished) / 1000));
+    }
+
+    public long getTimerMillis() {
+        return timermillis;
+    }
+
+    public void onTimerFinished() {
+        dialogFragment.dismiss();
+    }
+
+    public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
+        int textPadding = getContext()
+                .getResources()
+                .getDimensionPixelSize(R.dimen.text_padding_timer);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, textPadding, textPadding, 0);
+        params.gravity = Gravity.END | Gravity.TOP;
+        timerTextView.setPadding(textPadding, 0, textPadding, 0);
+        timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources()
+                .getDimension(R.dimen.text_size_timer));
+        TypedArray a = getContext()
+                .obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
+        int attributeResourceId = a.getResourceId(0, 0);
+        a.recycle();
+        int bgcolor = ContextCompat.getColor(getContext(), attributeResourceId);
+        double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
+        int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
+        timerTextView.setBackgroundColor(bgcolor);
+        timerTextView.setTextColor(textColor);
+        return params;
     }
 
 
-    public static void dismissDialog(FragmentManager fm, String dialogTag) {
-        log.trace(dialogTag);
-        DialogFragment dialog = (DialogFragment) fm.findFragmentByTag(dialogTag);
-        if (dialog != null) dialog.dismiss();
+    public K onCreateDialog(Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+
+        builder = clazz.getDeclaredConstructor(Context.class, int.class)
+                       .newInstance(getContext(), getStyle());
+
+        if (hasIcon()) builder.setIcon(getIcon());
+
+        if (hasTitle()) builder.setTitle(getTitle());
+
+        setDialogContent();
+
+        if (hasPositiveButton()) builder.setPositiveButton(getPositiveButton(), onClickListener);
+
+        if (hasNeutralButton()) builder.setNeutralButton(getNeutralButton(), onClickListener);
+
+        if (hasNegativeButton()) builder.setNegativeButton(getNegativeButton(), onClickListener);
+
+        Object dialog = builder.create();
+
+        View addView = addView();
+        if (addView != null) {
+            if (dialog instanceof android.support.v7.app.AlertDialog) {
+                ((android.support.v7.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
+            } else if (dialog instanceof android.app.AlertDialog) {
+                ((android.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
+            }
+        }
+        return (K) manipulateDialog((android.app.Dialog) dialog);
     }
 
+    public View addView() {
+        return null;
+    }
 
-    static abstract class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
+    public android.app.Dialog manipulateDialog(android.app.Dialog dialog) {
+        return dialog;
+    }
 
+    public void setDialogContent() {
+        if (hasMessage()) builder.setMessage(getMessage());
+    }
+
+    public Bundle addArgumentsToDialogAfterButtonClick(Bundle dialogArguments, int which) {
+        return dialogArguments;
+    }
+
+    static class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
         Bundle builderArgs = new Bundle();
+        boolean cancelable = true;
 
-        private Class<K> clazz;
-        private boolean cancelable = true;
+        private Class<K> dialogBaseClass;
 
-        AbstractBuilder(Class<K> clazz) {
-            this.clazz = clazz;
+        public AbstractBuilder(Class<K> dialogBaseClass) {
+            this.dialogBaseClass = dialogBaseClass;
         }
-
 
         public T setTimer(long millis) {
             builderArgs.putLong(ARG_LONG_TIMER, millis);
@@ -452,25 +470,35 @@ public class Dialog extends DialogFragment {
             return (T) this;
         }
 
+
         public T addBundle(Bundle bundle) {
             builderArgs.putAll(bundle);
             return (T) this;
         }
 
+        public void preBuild() {
 
-        public K build() {
-            try {
-                K result = clazz.newInstance();
-                result.setArguments(builderArgs);
-                result.setCancelable(cancelable);
-                return result;
-            } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+        public DialogFragment build() {
+            preBuild();
+            DialogFragment result = new DialogFragment();
+            result.initBase(dialogBaseClass);
+            result.setArguments(builderArgs);
+            result.setCancelable(cancelable);
+            return result;
+        }
+
+        public SupportDialogFragment buildSupport() {
+            preBuild();
+            SupportDialogFragment result = new SupportDialogFragment();
+            result.initBase(dialogBaseClass);
+            result.setArguments(builderArgs);
+            result.setCancelable(cancelable);
+            return result;
+        }
+
     }
 
     public static class Builder extends AbstractBuilder<Builder, Dialog> {
@@ -478,4 +506,18 @@ public class Dialog extends DialogFragment {
             super(Dialog.class);
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    public static void dismissDialog(android.app.FragmentManager fm, String dialogTag) {
+        log.trace(dialogTag);
+        android.app.DialogFragment dialog = (android.app.DialogFragment) fm.findFragmentByTag(dialogTag);
+        if (dialog != null) dialog.dismiss();
+    }
+
+    public static void dismissDialog(android.support.v4.app.FragmentManager fm, String dialogTag) {
+        log.trace(dialogTag);
+        android.support.v4.app.DialogFragment dialog = (android.support.v4.app.DialogFragment) fm.findFragmentByTag(dialogTag);
+        if (dialog != null) dialog.dismiss();
+    }
+
 }
