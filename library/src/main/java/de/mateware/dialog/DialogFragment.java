@@ -100,6 +100,12 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        baseDialog.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public android.app.Dialog onCreateDialog(Bundle savedInstanceState) {
         try {
             return baseDialog.onCreateDialog(AlertDialogBuilder.class);

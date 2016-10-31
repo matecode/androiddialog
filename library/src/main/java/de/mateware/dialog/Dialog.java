@@ -206,6 +206,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        log.debug("savedInstanceState: {}",savedInstanceState);
         timermillis = getArguments().getLong(ARG_LONG_TIMER, 0);
         if (savedInstanceState != null) timermillis = savedInstanceState.getLong(ARG_LONG_TIMER, 0);
     }
@@ -229,6 +230,12 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         }
 
     }
+    
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        log.debug("view: {}, savedInstanceState: {}");
+    }
+    
+    
 
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
@@ -243,6 +250,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onCancel(DialogInterface dialog) {
+        log.debug("dialog: {}",dialog);
         if (getTag() != null) {
             log.trace(getTag());
             if (cancelListener != null)
@@ -255,6 +263,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onResume() {
+        log.debug("");
         if (getTimerMillis() > 0) {
             timer = new CountDownTimer(getTimerMillis(), 100) {
 
@@ -286,6 +295,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onPause() {
+        log.debug("");
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -293,6 +303,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public Bundle onSaveInstanceState(Bundle outState) {
+        log.debug("outState: {}",outState);
         outState.putLong(ARG_LONG_TIMER, timermillis);
         return outState;
     }
@@ -487,6 +498,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
             result.setCancelable(cancelable);
+
             return result;
         }
 
@@ -496,6 +508,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
             result.setCancelable(cancelable);
+            result.setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL,0);
             return result;
         }
 
