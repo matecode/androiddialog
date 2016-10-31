@@ -24,7 +24,10 @@ public abstract class DialogRecyclerView<T extends DialogAdapterList.DialogAdapt
 
     @Override
     public View addView() {
-        return getRecyclerView();
+        RecyclerView recyclerView = getRecyclerView();
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+        recyclerView.setLayoutParams(layoutParams);
+        return recyclerView;
     }
 
 

@@ -4,22 +4,30 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.IOException;
+
 import de.mateware.dialog.R;
 
 /**
  * Created by Mate on 30.10.2016.
  */
 
-public class ApacheLicence20 extends AbstractLicence {
+public class StandardLicence extends AbstractLicence {
 
     private final CharSequence title;
     private final CharSequence subTitle;
     private final CharSequence licenceText;
 
-    public ApacheLicence20(Context context, CharSequence title, CharSequence copyRightOwner, int copyRightYear) {
+    public StandardLicence(Context context, CharSequence title, CharSequence copyRightOwner, int copyRightYear, String licenceFilename) {
         this.title = title;
         this.subTitle = context.getString(R.string.apache20_copyright,copyRightYear,copyRightOwner);
-        this.licenceText = context.getString(R.string.apache20_text);
+        CharSequence tempLicenceText;
+        try {
+            tempLicenceText = readFromLicencesAssetFolder(context,licenceFilename);
+        } catch (IOException e) {
+            tempLicenceText = context.getString(R.string.default_no_text);
+        }
+        this.licenceText = tempLicenceText;
     }
 
     @Override
@@ -37,7 +45,7 @@ public class ApacheLicence20 extends AbstractLicence {
         return licenceText;
     }
 
-    protected ApacheLicence20(Parcel in) {
+    protected StandardLicence(Parcel in) {
         title = (CharSequence) in.readValue(CharSequence.class.getClassLoader());
         subTitle = (CharSequence) in.readValue(CharSequence.class.getClassLoader());
         licenceText = (CharSequence) in.readValue(CharSequence.class.getClassLoader());
@@ -56,15 +64,15 @@ public class ApacheLicence20 extends AbstractLicence {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<ApacheLicence20> CREATOR = new Parcelable.Creator<ApacheLicence20>() {
+    public static final Parcelable.Creator<StandardLicence> CREATOR = new Parcelable.Creator<StandardLicence>() {
         @Override
-        public ApacheLicence20 createFromParcel(Parcel in) {
-            return new ApacheLicence20(in);
+        public StandardLicence createFromParcel(Parcel in) {
+            return new StandardLicence(in);
         }
 
         @Override
-        public ApacheLicence20[] newArray(int size) {
-            return new ApacheLicence20[size];
+        public StandardLicence[] newArray(int size) {
+            return new StandardLicence[size];
         }
     };
 }

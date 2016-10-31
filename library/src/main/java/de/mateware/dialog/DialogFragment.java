@@ -8,7 +8,11 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +39,7 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
         try {
             baseDialog = clazz.newInstance();
             baseDialog.setDialogFragment(this);
+
         } catch (java.lang.InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -108,6 +113,12 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
             e.printStackTrace();
         }
         throw new IllegalStateException("No Dialog created");
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public int showAllowStateLoss(@NonNull FragmentManager manager, String tag) {

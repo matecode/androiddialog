@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="default_no_text">No licence text found!</string>
     <string name="apache20_copyright">Copyright %1$d %2$s</string>
-    <string name="apache20_text">Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+    <style name="LicenceTitle" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop" type="dimen">8dp</item>
+        <item name="android:paddingBottom" type="dimen">8dp</item>
+    </style>
+    <style name="LicenceText">
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">monospace</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:padding" type="dimen">8dp</item>
+        <item name="android:background" type="color">#DEDEDE</item>
+    </style>
+    <style name="LicenceSubTitle" parent="LicenceText">
+        <item name="android:textStyle">bold</item>
+    </style>
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</string>
 </resources>

@@ -57,11 +57,17 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     private static final String ARG_STRING_BUTTONTEXTNEGATIVE = "negative_button_text";
     private static final String ARG_STRING_BUTTONTEXTNEUTRAL = "neutral_button_text";
 
+    protected static final String ARG_INT_TOPPADDING = "toppadding";
+    protected static final String ARG_INT_BOTTOMPADDING = "bottompadding";
+    protected static final String ARG_INT_LEFTPADDING = "leftpadding";
+    protected static final String ARG_INT_RIGHTPADDING = "rightpadding";
+
     public final static int BUTTON_POSITIVE = DialogInterface.BUTTON_POSITIVE;
     public final static int BUTTON_NEUTRAL = DialogInterface.BUTTON_NEUTRAL;
     public final static int BUTTON_NEGATIVE = DialogInterface.BUTTON_NEGATIVE;
 
     private M dialogFragment;
+
     public T builder;
 
     private CountDownTimer timer;
@@ -123,6 +129,21 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         return getArguments().containsKey(ARG_LONG_TIMER) && getArguments().getLong(ARG_LONG_TIMER, 0) > 0;
     }
 
+    protected int getTopPadding() {
+        return getArguments().getInt(ARG_INT_TOPPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding_top));
+    }
+    protected int getBottomPadding() {
+        return getArguments().getInt(ARG_INT_BOTTOMPADDING, hasButton() ? 0 : getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+    protected int getLeftPadding() {
+        return getArguments().getInt(ARG_INT_LEFTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+    protected int getRightPadding() {
+        return getArguments().getInt(ARG_INT_RIGHTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
+    }
+
+
+
     protected boolean hasTitle() {
         return (getArguments().containsKey(ARG_STRING_TITLE) || getArguments().containsKey(ARG_INT_TITLE));
     }
@@ -169,6 +190,10 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
     protected String getNeutralButton() {
         return getText(ARG_STRING_BUTTONTEXTNEUTRAL, ARG_INT_BUTTONTEXTNEUTRAL);
+    }
+
+    protected boolean hasButton() {
+        return hasPositiveButton() || hasNegativeButton() || hasNeutralButton();
     }
 
     protected String getText(String arg_string, String arg_int) {
@@ -285,41 +310,24 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public FrameLayout.LayoutParams getTimerTextViewLayoutParams(TextView timerTextView) {
-        int margin = getContext()
-                .getResources()
-                .getDimensionPixelSize(R.dimen.custom_dialog_padding);
-        int topMargin = getContext()
-                .getResources()
-                .getDimensionPixelSize(R.dimen.custom_dialog_padding_top);
         int textPadding = getContext()
                 .getResources()
                 .getDimensionPixelSize(R.dimen.text_padding_timer);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, textPadding, textPadding, 0);
-
-
         params.gravity = Gravity.END | Gravity.TOP;
-
         timerTextView.setPadding(textPadding, 0, textPadding, 0);
-
         timerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources()
                 .getDimension(R.dimen.text_size_timer));
-
         TypedArray a = getContext()
                 .obtainStyledAttributes(getTheme(), new int[]{R.attr.colorPrimary});
-
         int attributeResourceId = a.getResourceId(0, 0);
         a.recycle();
-
         int bgcolor = ContextCompat.getColor(getContext(), attributeResourceId);
         double y = (299 * Color.red(bgcolor) + 587 * Color.green(bgcolor) + 114 * Color.blue(bgcolor)) / 1000;
         int textColor = y >= 128 ? Color.BLACK : Color.WHITE;
-
         timerTextView.setBackgroundColor(bgcolor);
         timerTextView.setTextColor(textColor);
-
-        //timerTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-
         return params;
     }
 
@@ -346,9 +354,9 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         View addView = addView();
         if (addView != null) {
             if (dialog instanceof android.support.v7.app.AlertDialog) {
-                ((android.support.v7.app.AlertDialog) dialog).setView(addView);
+                ((android.support.v7.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
             } else if (dialog instanceof android.app.AlertDialog) {
-                ((android.app.AlertDialog) dialog).setView(addView);
+                ((android.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
             }
         }
         return (K) manipulateDialog((android.app.Dialog) dialog);
@@ -467,20 +475,6 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             builderArgs.putAll(bundle);
             return (T) this;
         }
-
-//        public K build() {
-//            try {
-//                K result = clazz.newInstance();
-//                result.setArguments(builderArgs);
-//                result.setCancelable(cancelable);
-//                return result;
-//            } catch (java.lang.InstantiationException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
 
         public void preBuild() {
 

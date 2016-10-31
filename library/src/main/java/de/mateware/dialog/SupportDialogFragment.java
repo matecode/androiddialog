@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
+import android.util.TypedValue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,10 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
         if (baseDialog == null)
             throw new IllegalStateException("initBase must be called, cannot be initialized from outside library");
         super.onCreate(savedInstanceState);
+
+
+        TypedValue value = new TypedValue();
+        getContext().getTheme().resolveAttribute(R.attr.dialogPreferredPadding,value,true);
         baseDialog.onCreate(savedInstanceState);
     }
 

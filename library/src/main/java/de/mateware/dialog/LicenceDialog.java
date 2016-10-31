@@ -1,12 +1,12 @@
 package de.mateware.dialog;
 
 import android.content.DialogInterface;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
@@ -19,9 +19,10 @@ import de.mateware.dialog.listener.DialogAdapterListListener;
  * Created by Mate on 30.10.2016.
  */
 
-public class LicenceDialog extends DialogAdapterList<AbstractLicence> {
+public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
     private static final Logger log = LoggerFactory.getLogger(LicenceDialog.class);
+
 
     DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
         @Override
@@ -37,58 +38,69 @@ public class LicenceDialog extends DialogAdapterList<AbstractLicence> {
     };
 
 
-    private class LicencesAdapter extends BaseAdapter {
+    @Override
+    public RecyclerView getRecyclerView() {
+        RecyclerView recyclerView = new RecyclerView(getContext());
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(new LicencesAdapter());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        return recyclerView;
+    }
+
+
+    public class LicencesAdapter extends RecyclerView.Adapter<LicenceViewHolder> {
+
+
         @Override
-        public int getCount() {
+        public LicenceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LicenceViewHolder viewHolder = new LicenceViewHolder(LayoutInflater.from(parent.getContext())
+                                                                               .inflate(R.layout.licence_layout, parent, false));
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(LicenceViewHolder holder, int position) {
+            AbstractLicence licence = getEntries().get(position);
+            holder.title.setText(licence.getTitle());
+            holder.subTitle.setText(licence.getSubTitle());
+            holder.licenceText.setText(licence.getLicenceText());
+        }
+
+        @Override
+        public int getItemCount() {
             return getEntries().size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            if (!getEntries().isEmpty() && getEntries().size() > position)
-                return getEntries().get(position);
-            return null;
-        }
-
-        @Override
-        public long getItemId(int pos) {
-            return pos;
-        }
-
-        @Override
-        public View getView(int pos, View convertView, ViewGroup parent) {
-            LicenceViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
-                                            .inflate(R.layout.licence_layout, parent, false);
-                viewHolder = new LicenceViewHolder();
-                viewHolder.title = (TextView) convertView.findViewById(R.id.titleText);
-                viewHolder.subTitle = (TextView) convertView.findViewById(R.id.subtitleText);
-                viewHolder.licenceText = (TextView) convertView.findViewById(R.id.licenceText);
-                convertView.setTag(viewHolder);
-            } else viewHolder = (LicenceViewHolder) convertView.getTag();
-
-            AbstractLicence licence = getEntries().get(pos);
-            viewHolder.title.setText(licence.getTitle());
-            viewHolder.subTitle.setText(licence.getSubTitle());
-            viewHolder.licenceText.setText(licence.getLicenceText());
-            return convertView;
         }
     }
 
-    static class LicenceViewHolder {
+
+    static class LicenceViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView subTitle;
         TextView licenceText;
+
+        public LicenceViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.titleText);
+            subTitle = (TextView) itemView.findViewById(R.id.subtitleText);
+            licenceText = (TextView) itemView.findViewById(R.id.licenceText);
+        }
     }
 
     public static class AbstractBuilder<M extends DialogAdapterListEntry, T extends AbstractBuilder, K extends DialogAdapterList> extends DialogAdapterList.AbstractBuilder<M, T, K> {
         public AbstractBuilder(Class<K> dialogBaseClass) {
             super(dialogBaseClass);
         }
+
+        @Override
+        public void preBuild() {
+            super.preBuild();
+        }
     }
 
-    public static class Builder extends AbstractBuilder<AbstractLicence,Builder,LicenceDialog> {
+    public static class Builder extends AbstractBuilder<AbstractLicence, Builder, LicenceDialog> {
         public Builder() {
             super(LicenceDialog.class);
         }
