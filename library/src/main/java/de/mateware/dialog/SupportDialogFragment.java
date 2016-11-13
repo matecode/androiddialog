@@ -1,7 +1,6 @@
 package de.mateware.dialog;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -61,12 +60,6 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
     public void onResume() {
         super.onResume();
         baseDialog.onResume();
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override
