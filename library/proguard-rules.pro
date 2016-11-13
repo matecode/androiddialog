@@ -46,3 +46,5 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+-keep class de.mateware.dialog.listener.* { *; }
