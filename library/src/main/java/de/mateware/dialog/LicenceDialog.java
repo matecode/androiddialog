@@ -12,6 +12,8 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 import de.mateware.dialog.licences.AbstractLicence;
 import de.mateware.dialog.listener.DialogAdapterListListener;
 
@@ -39,20 +41,25 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
 
     @Override
-    public RecyclerView getRecyclerView() {
+    public RecyclerView getRecyclerView(ArrayList<AbstractLicence> entries) {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new LicencesAdapter());
+        recyclerView.setAdapter(new LicencesAdapter(entries));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         return recyclerView;
     }
 
 
-    public class LicencesAdapter extends RecyclerView.Adapter<LicenceViewHolder> {
+    public static class LicencesAdapter extends RecyclerView.Adapter<LicenceViewHolder> {
 
+        public LicencesAdapter(ArrayList<AbstractLicence> entries) {
+            this.entries = entries;
+        }
+
+        ArrayList<AbstractLicence> entries;
 
         @Override
         public LicenceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,7 +70,7 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
         @Override
         public void onBindViewHolder(LicenceViewHolder holder, int position) {
-            AbstractLicence licence = getEntries().get(position);
+            AbstractLicence licence = entries.get(position);
             holder.title.setText(licence.getTitle());
             holder.subTitle.setText(licence.getSubTitle());
             holder.licenceText.setText(licence.getLicenceText());
@@ -71,7 +78,7 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
         @Override
         public int getItemCount() {
-            return getEntries().size();
+            return entries.size();
         }
     }
 

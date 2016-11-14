@@ -4,18 +4,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListAdapter;
 
+import java.util.ArrayList;
+
 /**
  * Created by Mate on 30.10.2016.
  */
 
 public abstract class DialogRecyclerView<T extends DialogAdapterList.DialogAdapterListEntry> extends DialogAdapterList<T> {
+
     @Override
-    public ListAdapter getAdapter() {
+    public ListAdapter getAdapter(ArrayList<T> entries) {
         //nothing
         return null;
     }
 
-    public abstract RecyclerView getRecyclerView();
+    public abstract RecyclerView getRecyclerView(ArrayList<T> entries);
 
     @Override
     public void setDialogContent() {
@@ -24,7 +27,7 @@ public abstract class DialogRecyclerView<T extends DialogAdapterList.DialogAdapt
 
     @Override
     public View addView() {
-        RecyclerView recyclerView = getRecyclerView();
+        RecyclerView recyclerView = getRecyclerView(getEntries());
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
         recyclerView.setLayoutParams(layoutParams);
         return recyclerView;
