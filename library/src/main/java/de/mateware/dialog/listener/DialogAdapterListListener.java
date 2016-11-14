@@ -7,6 +7,6 @@ import de.mateware.dialog.DialogAdapterList;
 /**
  * Created by Mate on 27.10.2016.
  */
-public interface DialogAdapterListListener {
-    void onDialogAdapterListClick(String tag, DialogAdapterList.DialogAdapterListEntry entry, Bundle arguments);
+public interface DialogAdapterListListener<T extends DialogAdapterList.DialogAdapterListEntry> {
+    void onDialogAdapterListClick(String tag, T entry, Bundle arguments);
 }
