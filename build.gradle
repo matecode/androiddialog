@@ -7,7 +7,7 @@ ext {
 
     supportLibVer = "25.0.0"
 
-    versionCodeInt = 16
+    versionCodeInt = 17
     versionNamePrefix = "1.2."
 }
 
