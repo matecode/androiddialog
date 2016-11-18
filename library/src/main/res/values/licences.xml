@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="default_no_text">No licence text found!</string>
-    <string name="apache20_copyright">Copyright %1$d %2$s</string>
+    <string name="apache20_copyright">Copyright (c) %1$d %2$s</string>
+    <string name="mit_copyright">Copyright (c) %1$d %2$s</string>
+    <string name="agpl30_copyright">Copyright (c) %1$d %2$s</string>
     <style name="LicenceTitle" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">bold</item>
         <item name="android:paddingTop" type="dimen">8dp</item>
