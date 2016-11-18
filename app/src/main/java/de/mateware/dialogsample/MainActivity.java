@@ -15,6 +15,7 @@ import de.mateware.dialog.DialogList;
 import de.mateware.dialog.LicenceDialog;
 import de.mateware.dialog.licences.Agpl30Licence;
 import de.mateware.dialog.licences.Apache20Licence;
+import de.mateware.dialog.licences.BsdLicence;
 import de.mateware.dialog.licences.MitLicence;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogListListener;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements DialogButtonListe
                                    .addEntry(new MitLicence(this, "Project2","Peter",2013))
                                    .addEntry(new Agpl30Licence(this, "Project3","Stefan",2012))
                                    .addEntry(new MitLicence(this, "Project4","Klass",2011))
+                                   .addEntry(new BsdLicence(this, "Project5","MATEYEAH",2011))
                                    .setPositiveButton()
                                    .buildSupport()
                                    .show(getSupportFragmentManager(), "LICENCESDIALOG");

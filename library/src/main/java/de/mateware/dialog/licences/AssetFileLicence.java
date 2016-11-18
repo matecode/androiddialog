@@ -1,6 +1,7 @@
 package de.mateware.dialog.licences;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.apache.commons.io.IOUtils;
 
@@ -33,5 +34,11 @@ public abstract class AssetFileLicence extends StandardLicence {
         String text = IOUtils.toString(inputStream,"UTF-8");
         inputStream.close();
         return text;
+    }
+
+    public void replaceInLicenceText(String tag, String replacement) {
+        if (!TextUtils.isEmpty(getLicenceText())) {
+            setLicenceText(getLicenceText().toString().replaceAll(tag,replacement));
+        }
     }
 }
