@@ -14,14 +14,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import de.mateware.dialog.licences.AbstractLicence;
+import de.mateware.dialog.licences.StandardLicence;
 import de.mateware.dialog.listener.DialogAdapterListListener;
 
 /**
  * Created by Mate on 30.10.2016.
  */
 
-public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
+public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
 
     private static final Logger log = LoggerFactory.getLogger(LicenceDialog.class);
 
@@ -41,7 +41,7 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
 
     @Override
-    public RecyclerView getRecyclerView(ArrayList<AbstractLicence> entries) {
+    public RecyclerView getRecyclerView(ArrayList<StandardLicence> entries) {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -55,11 +55,11 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
     public static class LicencesAdapter extends RecyclerView.Adapter<LicenceViewHolder> {
 
-        public LicencesAdapter(ArrayList<AbstractLicence> entries) {
+        public LicencesAdapter(ArrayList<StandardLicence> entries) {
             this.entries = entries;
         }
 
-        ArrayList<AbstractLicence> entries;
+        ArrayList<StandardLicence> entries;
 
         @Override
         public LicenceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -70,7 +70,7 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
 
         @Override
         public void onBindViewHolder(LicenceViewHolder holder, int position) {
-            AbstractLicence licence = entries.get(position);
+            StandardLicence licence = entries.get(position);
             holder.title.setText(licence.getTitle());
             holder.subTitle.setText(licence.getSubTitle());
             holder.licenceText.setText(licence.getLicenceText());
@@ -107,7 +107,7 @@ public class LicenceDialog extends DialogRecyclerView<AbstractLicence> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<AbstractLicence, Builder, LicenceDialog> {
+    public static class Builder extends AbstractBuilder<StandardLicence, Builder, LicenceDialog> {
         public Builder() {
             super(LicenceDialog.class);
         }

@@ -3,11 +3,13 @@ package de.mateware.dialog.licences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import de.mateware.dialog.DialogAdapterList;
+
 /**
  * Created by Mate on 30.10.2016.
  */
 
-public class StandardLicence extends AbstractLicence {
+public class StandardLicence extends DialogAdapterList.DialogAdapterListEntry {
 
     private CharSequence title;
     private CharSequence subTitle;
@@ -19,17 +21,14 @@ public class StandardLicence extends AbstractLicence {
         this.licenceText = licenceText;
     }
 
-    @Override
     public CharSequence getTitle() {
         return title;
     }
 
-    @Override
     public CharSequence getSubTitle() {
         return subTitle;
     }
 
-    @Override
     public CharSequence getLicenceText() {
         return licenceText;
     }

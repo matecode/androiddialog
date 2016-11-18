@@ -2,7 +2,10 @@ package de.mateware.dialog.licences;
 
 import android.content.Context;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.mateware.dialog.R;
 
@@ -21,5 +24,12 @@ public abstract class AssetFileLicence extends StandardLicence {
             tempLicenceText = context.getString(R.string.default_no_text);
         }
         setLicenceText(tempLicenceText);
+    }
+
+    private static String readFromLicencesAssetFolder(Context context, String filename) throws IOException {
+        InputStream inputStream  = context.getAssets().open("licences/"+filename);
+        String text = IOUtils.toString(inputStream,"UTF-8");
+        inputStream.close();
+        return text;
     }
 }
