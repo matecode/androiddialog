@@ -3,6 +3,7 @@
     <string name="apache20_copyright">Copyright (c) %1$d %2$s</string>
     <string name="mit_copyright">Copyright (c) %1$d %2$s</string>
     <string name="agpl30_copyright">Copyright (c) %1$d %2$s</string>
+    <string name="bsd_copyright">Copyright (c) %1$d %2$s. All rights reserved.</string>
     <style name="LicenceTitle" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">bold</item>
         <item name="android:paddingTop" type="dimen">8dp</item>
