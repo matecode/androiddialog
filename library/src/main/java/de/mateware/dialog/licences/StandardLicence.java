@@ -1,12 +1,7 @@
 package de.mateware.dialog.licences;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.IOException;
-
-import de.mateware.dialog.R;
 
 /**
  * Created by Mate on 30.10.2016.
@@ -14,20 +9,14 @@ import de.mateware.dialog.R;
 
 public class StandardLicence extends AbstractLicence {
 
-    private final CharSequence title;
-    private final CharSequence subTitle;
-    private final CharSequence licenceText;
+    private CharSequence title;
+    private CharSequence subTitle;
+    private CharSequence licenceText;
 
-    public StandardLicence(Context context, CharSequence title, CharSequence copyRightOwner, int copyRightYear, String licenceFilename) {
+    public StandardLicence(CharSequence title, CharSequence subTitle, CharSequence licenceText) {
         this.title = title;
-        this.subTitle = context.getString(R.string.apache20_copyright,copyRightYear,copyRightOwner);
-        CharSequence tempLicenceText;
-        try {
-            tempLicenceText = readFromLicencesAssetFolder(context,licenceFilename);
-        } catch (IOException e) {
-            tempLicenceText = context.getString(R.string.default_no_text);
-        }
-        this.licenceText = tempLicenceText;
+        this.subTitle = subTitle;
+        this.licenceText = licenceText;
     }
 
     @Override
@@ -43,6 +32,18 @@ public class StandardLicence extends AbstractLicence {
     @Override
     public CharSequence getLicenceText() {
         return licenceText;
+    }
+
+    public void setLicenceText(CharSequence licenceText) {
+        this.licenceText = licenceText;
+    }
+
+    public void setSubTitle(CharSequence subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public void setTitle(CharSequence title) {
+        this.title = title;
     }
 
     protected StandardLicence(Parcel in) {
