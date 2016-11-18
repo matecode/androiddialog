@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,12 @@ public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
         public void onBindViewHolder(LicenceViewHolder holder, int position) {
             StandardLicence licence = entries.get(position);
             holder.title.setText(licence.getTitle());
-            holder.subTitle.setText(licence.getSubTitle());
+            if (TextUtils.isEmpty(licence.getSubTitle())) {
+                holder.subTitle.setVisibility(View.GONE);
+            } else {
+                holder.subTitle.setVisibility(View.VISIBLE);
+                holder.subTitle.setText(licence.getSubTitle());
+            }
             holder.licenceText.setText(licence.getLicenceText());
         }
 
