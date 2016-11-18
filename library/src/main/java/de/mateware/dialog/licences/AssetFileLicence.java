@@ -7,23 +7,25 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.mateware.dialog.R;
-
 /**
  * Created by mate on 18.11.2016.
  */
 
 public abstract class AssetFileLicence extends StandardLicence {
 
+    public AssetFileLicence(Context context, CharSequence title, String licenceFilename) {
+        this(context,title,null,licenceFilename);
+    }
+
     public AssetFileLicence(Context context, CharSequence title, CharSequence subtitle, String licenceFilename) {
-        super(title, subtitle, null);
-        CharSequence tempLicenceText;
+        super();
         try {
-            tempLicenceText = readFromLicencesAssetFolder(context,licenceFilename);
+            setLicenceText(readFromLicencesAssetFolder(context,licenceFilename));
         } catch (IOException e) {
-            tempLicenceText = context.getString(R.string.default_no_text);
+
         }
-        setLicenceText(tempLicenceText);
+        setTitle(title);
+        setSubTitle(subtitle);
     }
 
     private static String readFromLicencesAssetFolder(Context context, String filename) throws IOException {

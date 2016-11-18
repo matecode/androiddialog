@@ -2,6 +2,7 @@ package de.mateware.dialog.licences;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import de.mateware.dialog.DialogAdapterList;
 
@@ -15,6 +16,13 @@ public class StandardLicence extends DialogAdapterList.DialogAdapterListEntry {
     private CharSequence subTitle;
     private CharSequence licenceText;
 
+    public StandardLicence() {
+    }
+
+    public StandardLicence(CharSequence title, CharSequence licenceText) {
+        this(title, null, licenceText);
+    }
+
     public StandardLicence(CharSequence title, CharSequence subTitle, CharSequence licenceText) {
         this.title = title;
         this.subTitle = subTitle;
@@ -22,7 +30,7 @@ public class StandardLicence extends DialogAdapterList.DialogAdapterListEntry {
     }
 
     public CharSequence getTitle() {
-        return title;
+        return TextUtils.isEmpty(title) ? "No title set!" : title;
     }
 
     public CharSequence getSubTitle() {
@@ -30,7 +38,7 @@ public class StandardLicence extends DialogAdapterList.DialogAdapterListEntry {
     }
 
     public CharSequence getLicenceText() {
-        return licenceText;
+        return TextUtils.isEmpty(licenceText) ? "No licence text set!" : licenceText;
     }
 
     public void setLicenceText(CharSequence licenceText) {

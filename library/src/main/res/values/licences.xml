@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="default_no_text">No licence text found!</string>
     <string name="apache20_copyright">Copyright (c) %1$d %2$s</string>
     <string name="mit_copyright">Copyright (c) %1$d %2$s</string>
     <string name="agpl30_copyright">Copyright (c) %1$d %2$s</string>
