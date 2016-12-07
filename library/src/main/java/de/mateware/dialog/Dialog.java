@@ -389,7 +389,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         return dialogArguments;
     }
 
-    static class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
+    public static class AbstractBuilder<T extends AbstractBuilder, K extends Dialog> {
         Bundle builderArgs = new Bundle();
         boolean cancelable = true;
 
