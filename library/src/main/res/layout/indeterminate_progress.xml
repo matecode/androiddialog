@@ -3,14 +3,14 @@
               android:orientation="horizontal"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-                android:gravity="center">
+                android:gravity="center_vertical">
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_weight="1"/>
+        />
 
     <TextView
         android:text="TextView"
