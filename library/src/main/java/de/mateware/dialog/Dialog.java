@@ -360,6 +360,8 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
         if (hasNegativeButton()) builder.setNegativeButton(getNegativeButton(), onClickListener);
 
+        builder = manipulateBuilderBeforeCreateDialog(builder);
+
         Object dialog = builder.create();
 
         View addView = addView();
@@ -375,6 +377,10 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
     public View addView() {
         return null;
+    }
+
+    public T manipulateBuilderBeforeCreateDialog(T builder) {
+        return builder;
     }
 
     public android.app.Dialog manipulateDialog(android.app.Dialog dialog) {
