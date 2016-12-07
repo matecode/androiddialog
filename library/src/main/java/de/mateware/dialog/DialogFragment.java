@@ -67,6 +67,7 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(ARG_BASECLASS, dialogClass);
         super.onSaveInstanceState(baseDialog.onSaveInstanceState(outState));
     }
 
