@@ -1,10 +1,12 @@
 package de.mateware.dialog;
 
 import android.content.DialogInterface;
-import android.support.v7.widget.DividerItemDecoration;
+import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +50,10 @@ public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new LicencesAdapter(entries));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
+
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        int pixels = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 5, displayMetrics );
+        recyclerView.addItemDecoration(new SpacesItemDecoration(pixels));
         return recyclerView;
     }
 
@@ -116,6 +120,20 @@ public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
     public static class Builder extends AbstractBuilder<StandardLicence, Builder, LicenceDialog> {
         public Builder() {
             super(LicenceDialog.class);
+        }
+    }
+
+    static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+
+        public SpacesItemDecoration(int pixels) {
+            this.space = pixels;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            if(parent.getChildPosition(view) != 0)
+                outRect.top = space;
         }
     }
 }
