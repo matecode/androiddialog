@@ -2,12 +2,12 @@ ext {
     compileSdkVer = 25
     buildToolsVer = "25.0.1"
 
-    minSdkVer = 9
+    minSdkVer = 14
     targetSdkVer = 25
 
     supportLibVer = "25.0.1"
 
-    versionCodeInt = 26
+    versionCodeInt = 27
     versionNamePrefix = "1.2."
 }
 
