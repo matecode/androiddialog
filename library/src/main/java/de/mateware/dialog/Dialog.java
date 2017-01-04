@@ -101,7 +101,14 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     protected Context getContext() {
-        return dialogFragment.getContext();
+        if (dialogFragment instanceof SupportDialogFragment || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return dialogFragment.getContext();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                return ((DialogFragment) dialogFragment).getActivity();
+            }
+        }
+        return null;
     }
 
     protected Resources getResources() {
