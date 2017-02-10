@@ -12,13 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 
 import de.mateware.dialog.licences.StandardLicence;
 import de.mateware.dialog.listener.DialogAdapterListListener;
+import de.mateware.dialog.log.Log;
 
 /**
  * Created by Mate on 30.10.2016.
@@ -26,19 +24,17 @@ import de.mateware.dialog.listener.DialogAdapterListListener;
 
 public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
 
-    private static final Logger log = LoggerFactory.getLogger(LicenceDialog.class);
-
 
     DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             DialogAdapterListEntry entry = getEntries().get(which);
-            log.debug("Button {} {}", which, entry);
+            Log.d("Button" + which + " " + entry);
             if (listListener != null)
                 listListener.onDialogAdapterListClick(getTag(), entry, getArguments());
             else
-                log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
-                                                                                                                 .getSimpleName());
+                Log.w(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                              .getSimpleName());
         }
     };
 
@@ -51,8 +47,9 @@ public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new LicencesAdapter(entries));
 
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        int pixels = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 5, displayMetrics );
+        DisplayMetrics displayMetrics = getContext().getResources()
+                                                    .getDisplayMetrics();
+        int pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, displayMetrics);
         recyclerView.addItemDecoration(new SpacesItemDecoration(pixels));
         return recyclerView;
     }
@@ -132,7 +129,7 @@ public class LicenceDialog extends DialogRecyclerView<StandardLicence> {
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            if(parent.getChildPosition(view) != 0)
+            if (parent.getChildPosition(view) != 0)
                 outRect.top = space;
         }
     }

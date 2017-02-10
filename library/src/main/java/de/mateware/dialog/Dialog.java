@@ -19,9 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 
 import de.mateware.dialog.base.BaseAlertDialogBuilderInterface;
@@ -29,6 +26,7 @@ import de.mateware.dialog.base.BaseDialogInterface;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogCancelListener;
 import de.mateware.dialog.listener.DialogDismissListener;
+import de.mateware.dialog.log.Log;
 
 /**
  * Created by mate on 28.10.2016.
@@ -36,7 +34,6 @@ import de.mateware.dialog.listener.DialogDismissListener;
 
 public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android.app.Dialog, M extends BaseDialogInterface> {
 
-    private static final Logger log = LoggerFactory.getLogger(Dialog.class);
 
     private static final String ARG_INT_STYLE = "style";
     private static final String ARG_INT_TITLE = "title_resid";
@@ -81,14 +78,14 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            log.trace("Button", which);
+            Log.d("Button" + which);
             Bundle dialogArguments = getArguments();
             dialogArguments.putAll(addArgumentsToDialogAfterButtonClick(dialogArguments, which));
             if (buttonListener != null)
                 buttonListener.onDialogClick(getTag(), dialogArguments, which);
             else
-                log.info(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
-                                                                                                            .getSimpleName());
+                Log.i(DialogButtonListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                         .getSimpleName());
         }
     };
 
@@ -139,16 +136,18 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     protected int getTopPadding() {
         return getArguments().getInt(ARG_INT_TOPPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding_top));
     }
+
     protected int getBottomPadding() {
         return getArguments().getInt(ARG_INT_BOTTOMPADDING, hasButton() ? 0 : getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
     }
+
     protected int getLeftPadding() {
         return getArguments().getInt(ARG_INT_LEFTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
     }
+
     protected int getRightPadding() {
         return getArguments().getInt(ARG_INT_RIGHTPADDING, getResources().getDimensionPixelSize(R.dimen.custom_dialog_padding));
     }
-
 
 
     protected boolean hasTitle() {
@@ -213,64 +212,54 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        log.debug("savedInstanceState: {}",savedInstanceState);
         timermillis = getArguments().getLong(ARG_LONG_TIMER, 0);
         if (savedInstanceState != null) timermillis = savedInstanceState.getLong(ARG_LONG_TIMER, 0);
     }
 
     public void onActivityCreated(Bundle saveInstanceState) {
-        log.debug("saveInstanceState: {}", saveInstanceState);
         try {
             buttonListener = (DialogButtonListener) getContext();
         } catch (ClassCastException e) {
-            log.warn(e.getMessage());
+            Log.w(e.getMessage());
         }
         try {
             dismissListener = (DialogDismissListener) getContext();
         } catch (ClassCastException e) {
-            log.warn(e.getMessage());
+            Log.w(e.getMessage());
         }
         try {
             cancelListener = (DialogCancelListener) getContext();
         } catch (ClassCastException e) {
-            log.warn(e.getMessage());
+            Log.w(e.getMessage());
         }
 
     }
-    
+
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        log.debug("view: {}, savedInstanceState: {}");
+
     }
-    
-    
 
     public void onDismiss(DialogInterface dialog) {
         if (getTag() != null) {
-            log.trace(getTag());
             if (dismissListener != null)
                 dismissListener.onDialogDismiss(getTag(), getArguments());
             else
-                log.info(DialogDismissListener.class.getSimpleName() + " not set in Activity "
-                        + getContext().getClass()
-                                      .getSimpleName());
+                Log.w(DialogDismissListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                          .getSimpleName());
         }
     }
 
     public void onCancel(DialogInterface dialog) {
-        log.debug("dialog: {}",dialog);
         if (getTag() != null) {
-            log.trace(getTag());
             if (cancelListener != null)
                 cancelListener.onDialogCancel(getTag(), getArguments());
             else
-                log.info(DialogCancelListener.class.getSimpleName() + " not set in Activity "
-                        + getContext().getClass()
-                                      .getSimpleName());
+                Log.w(DialogCancelListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                         .getSimpleName());
         }
     }
 
     public void onResume() {
-        log.debug("");
         if (getTimerMillis() > 0) {
             timer = new CountDownTimer(getTimerMillis(), 100) {
 
@@ -278,7 +267,6 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    log.debug("millisUntilFinished: {}", millisUntilFinished);
                     if (timerText == null) {
                         timerText = new TextView(getContext());
                         FrameLayout.LayoutParams lp = getTimerTextViewLayoutParams(timerText);
@@ -291,7 +279,6 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
                 @Override
                 public void onFinish() {
-                    log.debug("Finished timer with millis {}", timermillis);
                     timermillis = 0;
                     timerText.setText(getTimerText(0));
                     onTimerFinished();
@@ -302,7 +289,6 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public void onPause() {
-        log.debug("");
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -310,7 +296,6 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
     }
 
     public Bundle onSaveInstanceState(Bundle outState) {
-        log.debug("outState: {}",outState);
         outState.putLong(ARG_LONG_TIMER, timermillis);
         return outState;
     }
@@ -521,7 +506,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
             result.setCancelable(cancelable);
-            result.setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL,0);
+            result.setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL, 0);
             return result;
         }
 
@@ -535,13 +520,11 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void dismissDialog(android.app.FragmentManager fm, String dialogTag) {
-        log.trace(dialogTag);
         android.app.DialogFragment dialog = (android.app.DialogFragment) fm.findFragmentByTag(dialogTag);
         if (dialog != null) dialog.dismiss();
     }
 
     public static void dismissDialog(android.support.v4.app.FragmentManager fm, String dialogTag) {
-        log.trace(dialogTag);
         android.support.v4.app.DialogFragment dialog = (android.support.v4.app.DialogFragment) fm.findFragmentByTag(dialogTag);
         if (dialog != null) dialog.dismiss();
     }

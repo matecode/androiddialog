@@ -5,9 +5,9 @@ ext {
     minSdkVer = 14
     targetSdkVer = 25
 
-    supportLibVer = "25.0.1"
+    supportLibVer = "25.1.1"
 
-    versionCodeInt = 28
+    versionCodeInt = 29
     versionNamePrefix = "1.2."
 }
 

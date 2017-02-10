@@ -14,9 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 
 import de.mateware.dialog.base.AlertDialogBuilder;
@@ -29,7 +26,6 @@ import de.mateware.dialog.base.BaseDialogInterface;
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class DialogFragment<T extends Dialog> extends android.app.DialogFragment implements BaseDialogInterface {
 
-    private static final Logger log = LoggerFactory.getLogger(DialogFragment.class);
     Dialog<AlertDialogBuilder, AlertDialog, DialogFragment<T>> baseDialog;
     private static final String ARG_BASECLASS = "baseClass";
     Class<T> dialogClass;

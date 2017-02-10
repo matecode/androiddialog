@@ -3,18 +3,14 @@ package de.mateware.dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mateware.dialog.listener.DialogListListener;
+import de.mateware.dialog.log.Log;
 
 /**
  * Created by Mate on 29.10.2016.
  */
 
 public class DialogList extends Dialog {
-
-    private static final Logger log = LoggerFactory.getLogger(DialogList.class);
 
     static final String ARG_ARRAY_STRING_ITEMS = "list_items";
 
@@ -24,12 +20,12 @@ public class DialogList extends Dialog {
         public void onClick(DialogInterface dialog, int which) {
             String[] items = getItems();
             String value = items[which];
-            log.debug("Button {} {}", which, value);
+            Log.d("Button" + which + " " + value);
             if (listListener != null)
                 listListener.onDialogListClick(getTag(), DialogList.this.getArguments(), which, value, getItems());
             else
-                log.info(DialogListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
-                                                                                                          .getSimpleName());
+                Log.w(DialogListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                       .getSimpleName());
         }
     };
 
@@ -44,11 +40,10 @@ public class DialogList extends Dialog {
     @Override
     public void onActivityCreated(Bundle saveInstanceState) {
         super.onActivityCreated(saveInstanceState);
-        log.debug(this.getTag());
         try {
             listListener = (DialogListListener) getContext();
         } catch (ClassCastException e) {
-            log.warn(e.getMessage());
+            Log.w(e.getMessage());
         }
     }
 

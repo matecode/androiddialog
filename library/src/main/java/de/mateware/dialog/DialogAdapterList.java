@@ -6,20 +6,17 @@ import android.os.Parcelable;
 import android.widget.ListAdapter;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
 import de.mateware.dialog.listener.DialogAdapterListListener;
+import de.mateware.dialog.log.Log;
 
 /**
  * Created by Mate on 29.10.2016.
  */
 
 public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapterListEntry> extends Dialog {
-
-    private static final Logger log = LoggerFactory.getLogger(DialogAdapterList.class);
 
     public static final String ARG_ARRAY_PARCABLE_ENTRIES = "parcelableListEntries";
 
@@ -28,12 +25,12 @@ public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapte
         @Override
         public void onClick(DialogInterface dialog, int which) {
             DialogAdapterListEntry entry = getEntries().get(which);
-            log.debug("Button {} {}", which, entry);
+            Log.d("Button" + which + " " + entry);
             if (listListener != null)
                 listListener.onDialogAdapterListClick(getTag(), entry, getArguments());
             else
-                log.info(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
-                                                                                                                 .getSimpleName());
+                Log.w(DialogAdapterListListener.class.getSimpleName() + " not set in Activity " + getContext().getClass()
+                                                                                                              .getSimpleName());
         }
     };
 
@@ -54,7 +51,7 @@ public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapte
         try {
             listListener = (DialogAdapterListListener) getContext();
         } catch (ClassCastException e) {
-            log.warn(e.getMessage());
+            Log.w(e.getMessage());
         }
     }
 
@@ -78,7 +75,7 @@ public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapte
             return (T) this;
         }
 
-        public T setEntries(ArrayList<M> list){
+        public T setEntries(ArrayList<M> list) {
             entries = list;
             return (T) this;
         }
@@ -86,7 +83,7 @@ public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapte
         @Override
         public void preBuild() {
             super.preBuild();
-            builderArgs.putParcelableArrayList(ARG_ARRAY_PARCABLE_ENTRIES,entries);
+            builderArgs.putParcelableArrayList(ARG_ARRAY_PARCABLE_ENTRIES, entries);
         }
     }
 }

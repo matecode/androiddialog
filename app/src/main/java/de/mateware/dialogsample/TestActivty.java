@@ -7,9 +7,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mateware.dialog.Dialog;
 import de.mateware.dialog.DialogIndeterminateProgress;
 import de.mateware.dialog.DialogList;
@@ -20,14 +17,13 @@ import de.mateware.dialog.licences.BsdLicence;
 import de.mateware.dialog.licences.MitLicence;
 import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogListListener;
+import de.mateware.dialog.log.Log;
 
 /**
  * Created by mate on 04.01.2017.
  */
 
 public class TestActivty extends Activity implements DialogButtonListener, DialogListListener {
-
-    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
 
     static final String TAG_DIALOG_CUSTOMVIEWEXAMPLE = "customViewExample";
 
@@ -92,14 +88,14 @@ public class TestActivty extends Activity implements DialogButtonListener, Dialo
 
     @Override
     public void onDialogClick(String tag, Bundle dialogArguments, int which) {
-        log.debug("tag: {}, dialogArguments: {}, which: {}", tag, dialogArguments, which);
+        Log.d("tag: " + tag + " dialogArguments: " + dialogArguments + " which: " + which);
         if (TAG_DIALOG_CUSTOMVIEWEXAMPLE.equals(tag)) {
-            log.debug("EXTRA_TEST_ARGUMENT: {}", dialogArguments.getString(DialogCustomViewExample.EXTRA_TEST_ARGUMENT));
+            Log.d("EXTRA_TEST_ARGUMENT: " + dialogArguments.getString(DialogCustomViewExample.EXTRA_TEST_ARGUMENT));
         }
     }
 
     @Override
     public void onDialogListClick(String tag, Bundle arguments, int which, String value, String[] items) {
-        log.debug("tag: {}, arguments: {}, which: {}, value: {}, items: {}", tag, arguments, which, value, items);
+        Log.d("tag: " + tag + " arguments: " + arguments + ", which: " + which + ", value: " + value + ", items: " + items);
     }
 }
