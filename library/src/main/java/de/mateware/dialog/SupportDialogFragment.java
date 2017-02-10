@@ -12,9 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 
 import de.mateware.dialog.base.BaseDialogInterface;
@@ -23,7 +20,6 @@ import de.mateware.dialog.base.SupportAlertDialogBuilder;
 
 public class SupportDialogFragment<T extends Dialog> extends DialogFragment implements BaseDialogInterface {
 
-    public static Logger log = LoggerFactory.getLogger(SupportDialogFragment.class);
     Dialog<SupportAlertDialogBuilder, AlertDialog, SupportDialogFragment<T>> baseDialog;
     private static final String ARG_BASECLASS = "baseClass";
     Class<T> dialogClass;
