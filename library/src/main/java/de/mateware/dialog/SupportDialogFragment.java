@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
+import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -74,6 +75,13 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
     public void onPause() {
         baseDialog.onPause();
         super.onPause();
+    }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        baseDialog.onViewCreated(view, savedInstanceState);
     }
 
 
