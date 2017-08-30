@@ -98,6 +98,12 @@ public class SupportDialogFragment<T extends Dialog> extends DialogFragment impl
         super.onCancel(dialog);
     }
 
+    @Override
+    public void onDestroy() {
+        baseDialog.onDestroy();
+        super.onDestroy();
+    }
+
     @NonNull
     @Override
     public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
