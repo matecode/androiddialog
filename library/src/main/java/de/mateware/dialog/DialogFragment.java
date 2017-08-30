@@ -92,6 +92,12 @@ public class DialogFragment<T extends Dialog> extends android.app.DialogFragment
     }
 
     @Override
+    public void onDestroy() {
+        baseDialog.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }

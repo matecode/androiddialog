@@ -259,6 +259,10 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         }
     }
 
+    public void onDestroy() {
+
+    }
+
     public void onResume() {
         if (getTimerMillis() > 0) {
             timer = new CountDownTimer(getTimerMillis(), 100) {
