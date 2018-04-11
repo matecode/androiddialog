@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ListAdapter;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.util.ArrayList;
-
 import de.mateware.dialog.listener.DialogAdapterListListener;
 import de.mateware.dialog.log.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by Mate on 29.10.2016.
@@ -56,10 +54,7 @@ public abstract class DialogAdapterList<T extends DialogAdapterList.DialogAdapte
     }
 
     public abstract static class DialogAdapterListEntry implements Parcelable {
-        @Override
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this);
-        }
+
     }
 
     public static abstract class AbstractBuilder<M extends DialogAdapterListEntry, T extends AbstractBuilder, K extends DialogAdapterList> extends Dialog.AbstractBuilder<T, K> {
