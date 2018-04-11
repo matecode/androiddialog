@@ -3,7 +3,8 @@ package de.mateware.dialog.licences;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.apache.commons.io.IOUtils;
+import de.mateware.dialog.utils.Charsets;
+import de.mateware.dialog.utils.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +32,7 @@ public abstract class AssetFileLicence extends StandardLicence {
 
     private static String readFromLicencesAssetFolder(Context context, String filename) throws IOException {
         InputStream inputStream  = context.getAssets().open("licences/"+filename);
-        String text = IOUtils.toString(inputStream,"UTF-8");
+        String text = StreamUtils.toString(inputStream, Charsets.UTF_8);
         inputStream.close();
         return text;
     }
