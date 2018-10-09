@@ -3,9 +3,7 @@ package de.mateware.dialog.base;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-
-import de.mateware.dialog.base.BaseAlertDialogBuilderInterface;
+import androidx.annotation.RequiresApi;
 
 /**
  * Created by mate on 28.10.2016.

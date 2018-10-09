@@ -3,8 +3,8 @@ package de.mateware.dialogsample;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentManager;
 import android.view.View;
 
 import de.mateware.dialog.Dialog;
