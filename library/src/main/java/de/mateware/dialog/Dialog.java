@@ -8,10 +8,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.StyleRes;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -27,6 +27,8 @@ import de.mateware.dialog.listener.DialogButtonListener;
 import de.mateware.dialog.listener.DialogCancelListener;
 import de.mateware.dialog.listener.DialogDismissListener;
 import de.mateware.dialog.log.Log;
+
+import androidx.fragment.app.FragmentManager;
 
 /**
  * Created by mate on 28.10.2016.
@@ -362,8 +364,8 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
 
         View addView = addView();
         if (addView != null) {
-            if (dialog instanceof android.support.v7.app.AlertDialog) {
-                ((android.support.v7.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
+            if (dialog instanceof androidx.appcompat.app.AlertDialog) {
+                ((androidx.appcompat.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
             } else if (dialog instanceof android.app.AlertDialog) {
                 ((android.app.AlertDialog) dialog).setView(addView, getLeftPadding(), getTopPadding(), getRightPadding(), getBottomPadding());
             }
@@ -510,7 +512,7 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
             result.initBase(dialogBaseClass);
             result.setArguments(builderArgs);
             result.setCancelable(cancelable);
-            result.setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL, 0);
+            result.setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL, 0);
             return result;
         }
 
@@ -528,8 +530,8 @@ public class Dialog<T extends BaseAlertDialogBuilderInterface, K extends android
         if (dialog != null) dialog.dismiss();
     }
 
-    public static void dismissDialog(android.support.v4.app.FragmentManager fm, String dialogTag) {
-        android.support.v4.app.DialogFragment dialog = (android.support.v4.app.DialogFragment) fm.findFragmentByTag(dialogTag);
+    public static void dismissDialog(FragmentManager fm, String dialogTag) {
+        androidx.fragment.app.DialogFragment dialog = (androidx.fragment.app.DialogFragment) fm.findFragmentByTag(dialogTag);
         if (dialog != null) dialog.dismiss();
     }
 

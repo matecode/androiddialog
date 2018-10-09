@@ -3,7 +3,7 @@ package de.mateware.dialog.base;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.StyleRes;
+import androidx.annotation.StyleRes;
 
 /**
  * Created by mate on 28.10.2016.
